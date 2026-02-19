@@ -204,7 +204,8 @@ function App() {
         {activeTab === 'me' && <ScreenMe onOpenAdmin={() => setShowAdmin(true)} showNotification={showNotification} />}
         {activeTab === 'admin' && isAdmin && <ScreenAdmin onBack={() => setActiveTab('dashboard')} />}
 
-        {/* Bottom Navigation */}
+        {/* Bottom Navigation - Hide when adding/editing transaction */}
+        {activeTab !== 'add' && (
         <nav className="fixed bottom-6 left-0 right-0 mx-auto w-[calc(100%-2rem)] glass-dark border border-white/10 px-6 py-4 flex justify-between items-center z-50 max-w-md rounded-[2.5rem] shadow-2xl">
           <button
             onClick={() => setActiveTab('dashboard')}
@@ -243,6 +244,7 @@ function App() {
             <Icons.User size={24} />
           </button>
         </nav>
+        )}
 
         {/* Notification */}
         {notification && (
@@ -254,8 +256,8 @@ function App() {
           </div>
         )}
 
-        {/* Voice Button */}
-        {!/Line/i.test(navigator.userAgent) && pkgFeatures.voice && (
+        {/* Voice Button - Hide when adding/editing transaction */}
+        {activeTab !== 'add' && !/Line/i.test(navigator.userAgent) && pkgFeatures.voice && (
           <button
             onClick={handleGlobalVoiceAdd}
             className={`fixed bottom-28 right-6 w-14 h-14 rounded-full flex items-center justify-center shadow-2xl z-50 transition-all active:scale-90 ${isGlobalListening ? 'bg-red-500 text-white animate-pulse shadow-red-500/40' : 'gold-bg text-black shadow-gold-900/20'}`}
