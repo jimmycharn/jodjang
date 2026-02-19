@@ -27,6 +27,7 @@ function App() {
   const [notification, setNotification] = useState(null);
   const [confirmDialog, setConfirmDialog] = useState({ isOpen: false, title: '', message: '', onConfirm: null });
   const [isGlobalListening, setIsGlobalListening] = useState(false);
+  const [historySelectMode, setHistorySelectMode] = useState(false);
   const globalRecogRef = useRef(null);
 
   const showNotification = (msg, type = 'success') => {
@@ -193,6 +194,7 @@ function App() {
             setActiveWalletId={setActiveWalletId}
             setEditTx={setEditTx}
             setActiveTab={setActiveTab}
+            onSelectModeChange={setHistorySelectMode}
           />
         )}
         {activeTab === 'savings' && (
@@ -204,8 +206,8 @@ function App() {
         {activeTab === 'me' && <ScreenMe onOpenAdmin={() => setShowAdmin(true)} showNotification={showNotification} />}
         {activeTab === 'admin' && isAdmin && <ScreenAdmin onBack={() => setActiveTab('dashboard')} />}
 
-        {/* Bottom Navigation - Hide when adding/editing transaction */}
-        {activeTab !== 'add' && (
+        {/* Bottom Navigation - Hide when adding/editing transaction or in select mode */}
+        {activeTab !== 'add' && !historySelectMode && (
         <nav className="fixed bottom-6 left-0 right-0 mx-auto w-[calc(100%-2rem)] glass-dark border border-white/10 px-6 py-4 flex justify-between items-center z-50 max-w-md rounded-[2.5rem] shadow-2xl">
           <button
             onClick={() => setActiveTab('dashboard')}

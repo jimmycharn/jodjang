@@ -3,7 +3,7 @@ import { useData } from '../../context/DataContext';
 import { formatCurrency, toLocalDateString } from '../../lib/utils';
 import { Icons } from '../ui/Icons';
 
-const ScreenHistory = ({ activeWalletId, setActiveWalletId, setEditTx, setActiveTab }) => {
+const ScreenHistory = ({ activeWalletId, setActiveWalletId, setEditTx, setActiveTab, onSelectModeChange }) => {
   const { transactions, categories, wallets, deleteTransaction, setTransactions } = useData();
   const [filterType, setFilterType] = useState('all');
   const [filterCatId, setFilterCatId] = useState('all');
@@ -22,6 +22,10 @@ const ScreenHistory = ({ activeWalletId, setActiveWalletId, setEditTx, setActive
       searchInputRef.current.focus();
     }
   }, [showSearch]);
+
+  useEffect(() => {
+    onSelectModeChange?.(selectMode);
+  }, [selectMode, onSelectModeChange]);
 
   const exitSelectMode = () => {
     setSelectMode(false);
