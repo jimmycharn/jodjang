@@ -211,37 +211,39 @@ const ScreenAdd = ({ editTx, setEditTx, setActiveTab, showNotification, requestC
         </div>
       </div>
 
-      {/* AI Input */}
-      <div className="px-8 mb-6 space-y-3">
-        <div className={`glass-dark rounded-2xl p-3 flex items-center gap-3 border transition-all shadow-lg relative ${isListening ? 'border-red-500/50 shadow-red-500/20' : 'border-white/10'}`}>
-          <div className={`p-2 transition-colors shrink-0 ${isListening ? 'text-red-500 animate-pulse' : 'text-gold-primary'}`}>
-            <Icons.Sparkles size={20} />
+      {/* AI Input - Hide when editing */}
+      {!editTx && (
+        <div className="px-8 mb-6 space-y-3">
+          <div className={`glass-dark rounded-2xl p-3 flex items-center gap-3 border transition-all shadow-lg relative ${isListening ? 'border-red-500/50 shadow-red-500/20' : 'border-white/10'}`}>
+            <div className={`p-2 transition-colors shrink-0 ${isListening ? 'text-red-500 animate-pulse' : 'text-gold-primary'}`}>
+              <Icons.Sparkles size={20} />
+            </div>
+            <input
+              ref={aiInputRef}
+              value={aiText}
+              onChange={e => setAiText(e.target.value)}
+              onKeyPress={e => e.key === 'Enter' && handleAI()}
+              className="flex-1 bg-transparent outline-none text-sm font-bold text-white placeholder:text-gray-600 min-w-0 pr-10"
+              placeholder="พิมพ์หรือพูด เช่น 'กินข้าว 50 บาท'..."
+            />
+            {!/Line/i.test(navigator.userAgent) && pkgFeatures.voice && (
+              <button
+                onClick={handleVoiceInput}
+                className={`absolute right-2 top-1/2 -translate-y-1/2 p-2 rounded-xl transition-all ${isListening ? 'bg-red-500 text-white animate-pulse' : 'text-gray-400 hover:text-white'}`}
+              >
+                <Icons.Mic size={20} />
+              </button>
+            )}
           </div>
-          <input
-            ref={aiInputRef}
-            value={aiText}
-            onChange={e => setAiText(e.target.value)}
-            onKeyPress={e => e.key === 'Enter' && handleAI()}
-            className="flex-1 bg-transparent outline-none text-sm font-bold text-white placeholder:text-gray-600 min-w-0 pr-10"
-            placeholder="พิมพ์หรือพูด เช่น 'กินข้าว 50 บาท'..."
-          />
-          {!/Line/i.test(navigator.userAgent) && pkgFeatures.voice && (
-            <button
-              onClick={handleVoiceInput}
-              className={`absolute right-2 top-1/2 -translate-y-1/2 p-2 rounded-xl transition-all ${isListening ? 'bg-red-500 text-white animate-pulse' : 'text-gray-400 hover:text-white'}`}
-            >
-              <Icons.Mic size={20} />
-            </button>
-          )}
+          <button
+            onClick={handleAI}
+            disabled={aiLoading}
+            className="w-full py-3 gold-bg text-black rounded-xl font-black text-xs active:scale-95 transition-all shadow-lg shadow-gold-900/20 disabled:opacity-50"
+          >
+            {aiLoading ? '...' : 'วิเคราะห์ด้วย AI'}
+          </button>
         </div>
-        <button
-          onClick={handleAI}
-          disabled={aiLoading}
-          className="w-full py-3 gold-bg text-black rounded-xl font-black text-xs active:scale-95 transition-all shadow-lg shadow-gold-900/20 disabled:opacity-50"
-        >
-          {aiLoading ? '...' : 'วิเคราะห์ด้วย AI'}
-        </button>
-      </div>
+      )}
 
       {/* Amount Input */}
       <div className="flex flex-col items-center py-8">
@@ -273,7 +275,7 @@ const ScreenAdd = ({ editTx, setEditTx, setActiveTab, showNotification, requestC
             type="date"
             value={date}
             onChange={e => setDate(e.target.value)}
-            className="bg-white/5 border border-white/10 px-5 py-2.5 rounded-2xl text-xs font-bold text-gray-300 outline-none focus:border-gold-primary/30 transition-all"
+            className="bg-white/5 border border-white/10 px-6 py-3 rounded-2xl text-sm font-bold text-gray-300 outline-none focus:border-gold-primary/30 transition-all min-w-[180px]"
           />
         </div>
       </div>
