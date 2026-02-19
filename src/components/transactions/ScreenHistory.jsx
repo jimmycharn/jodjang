@@ -1,23 +1,66 @@
-import { useState, useEffect, useRef } from 'react';
+import { useState, useEffect, useRef, useCallback } from 'react';
 import { useData } from '../../context/DataContext';
 import { formatCurrency, toLocalDateString } from '../../lib/utils';
 import { Icons } from '../ui/Icons';
 
 const ScreenHistory = ({ activeWalletId, setActiveWalletId, setEditTx, setActiveTab }) => {
-  const { transactions, categories, wallets } = useData();
+  const { transactions, categories, wallets, deleteTransaction, setTransactions } = useData();
   const [filterType, setFilterType] = useState('all');
   const [filterCatId, setFilterCatId] = useState('all');
   const [startDate, setStartDate] = useState(toLocalDateString(new Date(new Date().getFullYear(), new Date().getMonth(), 1)));
   const [endDate, setEndDate] = useState(toLocalDateString(new Date()));
   const [searchQuery, setSearchQuery] = useState('');
   const [showSearch, setShowSearch] = useState(false);
+  const [selectMode, setSelectMode] = useState(false);
+  const [selectedIds, setSelectedIds] = useState(new Set());
+  const [isDeleting, setIsDeleting] = useState(false);
   const searchInputRef = useRef(null);
+  const longPressTimerRef = useRef(null);
 
   useEffect(() => {
     if (showSearch && searchInputRef.current) {
       searchInputRef.current.focus();
     }
   }, [showSearch]);
+
+  const exitSelectMode = () => {
+    setSelectMode(false);
+    setSelectedIds(new Set());
+  };
+
+  const handleLongPressStart = useCallback((txId) => {
+    longPressTimerRef.current = setTimeout(() => {
+      setSelectMode(true);
+      setSelectedIds(new Set([txId]));
+    }, 500);
+  }, []);
+
+  const handleLongPressEnd = useCallback(() => {
+    if (longPressTimerRef.current) {
+      clearTimeout(longPressTimerRef.current);
+      longPressTimerRef.current = null;
+    }
+  }, []);
+
+  const toggleSelect = (txId) => {
+    setSelectedIds(prev => {
+      const next = new Set(prev);
+      if (next.has(txId)) next.delete(txId);
+      else next.add(txId);
+      return next;
+    });
+  };
+
+  const handleDeleteSelected = async () => {
+    if (selectedIds.size === 0) return;
+    setIsDeleting(true);
+    for (const id of selectedIds) {
+      await deleteTransaction(id);
+      setTransactions(prev => prev.filter(t => t.id !== id));
+    }
+    setIsDeleting(false);
+    exitSelectMode();
+  };
 
   const filteredCategories = filterType === 'all'
     ? categories
@@ -193,13 +236,31 @@ const ScreenHistory = ({ activeWalletId, setActiveWalletId, setEditTx, setActive
               <div className="glass-dark rounded-[2rem] border border-white/10 overflow-hidden shadow-xl">
                 {grouped[date].map(t => {
                   const cat = categories.find(c => c.id === t.categoryId) || { name: 'อื่นๆ', color: '#333' };
+                  const isSelected = selectedIds.has(t.id);
                   return (
                     <div
                       key={t.id}
-                      onClick={() => { setEditTx(t); setActiveTab('add'); }}
-                      className="p-5 flex justify-between items-center border-b border-white/5 last:border-0 active:bg-white/5 transition-colors cursor-pointer group"
+                      onClick={() => {
+                        if (selectMode) {
+                          toggleSelect(t.id);
+                        } else {
+                          setEditTx(t); setActiveTab('add');
+                        }
+                      }}
+                      onTouchStart={() => handleLongPressStart(t.id)}
+                      onTouchEnd={handleLongPressEnd}
+                      onTouchMove={handleLongPressEnd}
+                      onMouseDown={() => handleLongPressStart(t.id)}
+                      onMouseUp={handleLongPressEnd}
+                      onMouseLeave={handleLongPressEnd}
+                      className={`p-5 flex justify-between items-center border-b border-white/5 last:border-0 transition-colors cursor-pointer group select-none ${isSelected ? 'bg-gold-primary/10' : 'active:bg-white/5'}`}
                     >
-                      <div className="flex items-center gap-5">
+                      <div className="flex items-center gap-4">
+                        {selectMode && (
+                          <div className={`w-6 h-6 rounded-lg border-2 flex items-center justify-center flex-shrink-0 transition-all ${isSelected ? 'gold-bg border-gold-primary' : 'border-white/20 bg-white/5'}`}>
+                            {isSelected && <Icons.Check size={14} className="text-black" />}
+                          </div>
+                        )}
                         <div
                           className="w-12 h-12 rounded-2xl text-white flex items-center justify-center font-black text-lg shadow-lg group-hover:scale-110 transition-transform"
                           style={{ backgroundColor: cat.color, boxShadow: `0 6px 15px -4px ${cat.color}66` }}
@@ -231,6 +292,40 @@ const ScreenHistory = ({ activeWalletId, setActiveWalletId, setEditTx, setActive
           </div>
         )}
       </div>
+
+      {/* Select Mode Toolbar */}
+      {selectMode && (
+        <div className="fixed bottom-6 left-0 right-0 mx-auto max-w-md px-4 z-50 animate-slide-up">
+          <div className="glass-dark border border-white/10 rounded-[2rem] px-6 py-4 flex items-center justify-between shadow-2xl">
+            <button
+              onClick={exitSelectMode}
+              className="flex items-center gap-2 text-gray-400 font-black text-sm active:scale-95 transition-all"
+            >
+              <Icons.X size={18} />
+              ยกเลิก
+            </button>
+            <div className="text-xs font-black text-gray-500">
+              เลือก {selectedIds.size} รายการ
+            </div>
+            <button
+              onClick={handleDeleteSelected}
+              disabled={selectedIds.size === 0 || isDeleting}
+              className={`flex items-center gap-2 font-black text-sm px-4 py-2 rounded-xl transition-all active:scale-95 ${
+                selectedIds.size > 0
+                  ? 'bg-red-500/20 text-red-400 border border-red-500/30'
+                  : 'text-gray-600 opacity-40'
+              }`}
+            >
+              {isDeleting ? (
+                <div className="w-4 h-4 border-2 border-red-400 border-t-transparent rounded-full animate-spin" />
+              ) : (
+                <Icons.Trash2 size={18} />
+              )}
+              ลบ
+            </button>
+          </div>
+        </div>
+      )}
     </div>
   );
 };
