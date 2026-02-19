@@ -1,0 +1,143 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+body {
+  font-family: 'Sarabun', sans-serif;
+  background-color: var(--bg-primary, #0a0a0a);
+  color: var(--text-primary, #ffffff);
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+/* Glass morphism effect */
+.glass {
+  background: var(--glass-bg, rgba(20, 20, 20, 0.7));
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+}
+
+.glass-dark {
+  background: var(--glass-bg, rgba(20, 20, 20, 0.7));
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  border: 1px solid var(--glass-border, rgba(255, 255, 255, 0.1));
+  box-shadow: var(--card-shadow, 0 8px 32px 0 rgba(0, 0, 0, 0.37));
+}
+
+/* Gold accent colors */
+.gold-text {
+  color: var(--accent-color, #D4AF37);
+}
+
+.gold-bg {
+  background-color: var(--accent-color, #D4AF37);
+}
+
+/* Hide scrollbar but keep functionality */
+.hide-scroll {
+  -ms-overflow-style: none;
+  scrollbar-width: none;
+}
+
+.hide-scroll::-webkit-scrollbar {
+  display: none;
+}
+
+/* Amount input styling */
+.amount-input::-webkit-outer-spin-button,
+.amount-input::-webkit-inner-spin-button {
+  -webkit-appearance: none;
+  margin: 0;
+}
+
+.amount-input[type=number] {
+  -moz-appearance: textfield;
+}
+
+/* Navigation add button glow */
+.nav-add-glow {
+  box-shadow: 0 0 30px rgba(212, 175, 55, 0.4);
+}
+
+/* Selection color - theme aware */
+::selection {
+  background-color: rgba(212, 175, 55, 0.3);
+}
+
+/* Light theme overrides */
+:root[data-theme="light"] {
+  --bg-primary: #F5F7FA;
+  --bg-secondary: #FFFFFF;
+  --text-primary: #1E293B;
+  --text-secondary: #64748B;
+  --accent-color: #2563EB;
+  --glass-bg: rgba(255, 255, 255, 0.8);
+  --glass-border: rgba(0, 0, 0, 0.05);
+  --card-shadow: 0 4px 20px rgba(0, 0, 0, 0.05);
+}
+
+/* Trend line animation */
+.trend-line {
+  stroke-dasharray: 1000;
+  stroke-dashoffset: 1000;
+  animation: drawLine 2s ease-out forwards;
+}
+
+.trend-dot {
+  opacity: 0;
+  animation: fadeInDot 0.5s ease-out forwards;
+}
+
+.trend-dot:nth-child(1) { animation-delay: 0.1s; }
+.trend-dot:nth-child(2) { animation-delay: 0.2s; }
+.trend-dot:nth-child(3) { animation-delay: 0.3s; }
+.trend-dot:nth-child(4) { animation-delay: 0.4s; }
+.trend-dot:nth-child(5) { animation-delay: 0.5s; }
+
+@keyframes drawLine {
+  to {
+    stroke-dashoffset: 0;
+  }
+}
+
+@keyframes fadeInDot {
+  to {
+    opacity: 1;
+  }
+}
+
+/* Input focus styles */
+input:focus {
+  outline: none;
+}
+
+/* Button active state */
+button:active {
+  transform: scale(0.98);
+}
+
+/* Custom scrollbar for modals */
+.custom-scroll::-webkit-scrollbar {
+  width: 4px;
+}
+
+.custom-scroll::-webkit-scrollbar-track {
+  background: rgba(255, 255, 255, 0.05);
+  border-radius: 2px;
+}
+
+.custom-scroll::-webkit-scrollbar-thumb {
+  background: rgba(212, 175, 55, 0.3);
+  border-radius: 2px;
+}
+
+.custom-scroll::-webkit-scrollbar-thumb:hover {
+  background: rgba(212, 175, 55, 0.5);
+}
