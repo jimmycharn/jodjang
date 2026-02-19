@@ -1,4 +1,4 @@
-import { useState, useRef } from 'react';
+import { useState, useRef, useEffect } from 'react';
 import { useAuth } from './context/AuthContext';
 import { useData } from './context/DataContext';
 import { usePackage } from './context/PackageContext';
@@ -20,7 +20,12 @@ function App() {
   const { categories, wallets, transactions, setTransactions, saveTransaction, loading: dataLoading } = useData();
   const { features: pkgFeatures } = usePackage();
   
-  const [activeTab, setActiveTab] = useState('dashboard');
+  const [activeTab, setActiveTab] = useState(() => {
+    // Read initial tab from URL parameter for LIFF
+    const params = new URLSearchParams(window.location.search);
+    const tab = params.get('tab');
+    return tab && ['dashboard', 'history', 'add', 'savings', 'settings', 'me', 'admin'].includes(tab) ? tab : 'dashboard';
+  });
   const [showAdmin, setShowAdmin] = useState(false);
   const [activeWalletId, setActiveWalletId] = useState('all');
   const [editTx, setEditTx] = useState(null);
