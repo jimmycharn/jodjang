@@ -257,7 +257,7 @@ const ScreenHistory = ({ activeWalletId, setActiveWalletId, setEditTx, setActive
                     >
                       <div className="flex items-center gap-4">
                         {selectMode && (
-                          <div className={`w-6 h-6 rounded-lg border-2 flex items-center justify-center flex-shrink-0 transition-all ${isSelected ? 'gold-bg border-gold-primary' : 'border-white/20 bg-white/5'}`}>
+                          <div className={`w-6 h-6 rounded-lg border-2 flex items-center justify-center flex-shrink-0 transition-all ${isSelected ? 'gold-bg border-gold-primary' : 'border-gray-400 bg-gray-100 dark:border-white/30 dark:bg-white/10'}`}>
                             {isSelected && <Icons.Check size={14} className="text-black" />}
                           </div>
                         )}
@@ -295,11 +295,11 @@ const ScreenHistory = ({ activeWalletId, setActiveWalletId, setEditTx, setActive
 
       {/* Select Mode Toolbar */}
       {selectMode && (
-        <div className="fixed bottom-6 left-0 right-0 mx-auto max-w-md px-4 z-50 animate-slide-up">
-          <div className="glass-dark border border-white/10 rounded-[2rem] px-6 py-4 flex items-center justify-between shadow-2xl">
+        <div className="fixed bottom-6 left-0 right-0 mx-auto max-w-md px-4 z-[100] animate-slide-up">
+          <div className="bg-white dark:bg-[#1a1a1a] border border-gray-200 dark:border-white/10 rounded-[2rem] px-6 py-4 flex items-center justify-between shadow-2xl">
             <button
               onClick={exitSelectMode}
-              className="flex items-center gap-2 text-gray-400 font-black text-sm active:scale-95 transition-all"
+              className="flex items-center gap-2 text-gray-600 dark:text-gray-400 font-black text-sm active:scale-95 transition-all"
             >
               <Icons.X size={18} />
               ยกเลิก
@@ -312,12 +312,12 @@ const ScreenHistory = ({ activeWalletId, setActiveWalletId, setEditTx, setActive
               disabled={selectedIds.size === 0 || isDeleting}
               className={`flex items-center gap-2 font-black text-sm px-4 py-2 rounded-xl transition-all active:scale-95 ${
                 selectedIds.size > 0
-                  ? 'bg-red-500/20 text-red-400 border border-red-500/30'
-                  : 'text-gray-600 opacity-40'
+                  ? 'bg-red-500/20 text-red-500 border border-red-500/30'
+                  : 'text-gray-400 opacity-40'
               }`}
             >
               {isDeleting ? (
-                <div className="w-4 h-4 border-2 border-red-400 border-t-transparent rounded-full animate-spin" />
+                <div className="w-4 h-4 border-2 border-red-500 border-t-transparent rounded-full animate-spin" />
               ) : (
                 <Icons.Trash2 size={18} />
               )}
