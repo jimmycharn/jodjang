@@ -20,6 +20,7 @@ const ScreenAdd = ({ editTx, setEditTx, setActiveTab, showNotification, requestC
   const [aiText, setAiText] = useState('');
   const [aiLoading, setAiLoading] = useState(false);
   const [isListening, setIsListening] = useState(false);
+  const [useAiMode, setUseAiMode] = useState(true); // Default to AI mode for new transactions
   const aiInputRef = useRef(null);
   const recogRef = useRef(null);
 
@@ -211,8 +212,30 @@ const ScreenAdd = ({ editTx, setEditTx, setActiveTab, showNotification, requestC
         </div>
       </div>
 
-      {/* AI Input - Hide when editing */}
+      {/* Mode Toggle - Only show when adding new transaction */}
       {!editTx && (
+        <div className="px-8 mb-4 flex justify-center">
+          <div className="flex gap-2 bg-white/5 p-1.5 rounded-full border border-white/10">
+            <button
+              onClick={() => setUseAiMode(true)}
+              className={`px-5 py-2 rounded-full font-black text-xs transition-all flex items-center gap-2 ${useAiMode ? 'gold-bg text-black shadow-lg shadow-gold-900/20' : 'text-gray-500'}`}
+            >
+              <Icons.Sparkles size={14} />
+              AI
+            </button>
+            <button
+              onClick={() => setUseAiMode(false)}
+              className={`px-5 py-2 rounded-full font-black text-xs transition-all flex items-center gap-2 ${!useAiMode ? 'gold-bg text-black shadow-lg shadow-gold-900/20' : 'text-gray-500'}`}
+            >
+              <Icons.Edit size={14} />
+              ป้อนเอง
+            </button>
+          </div>
+        </div>
+      )}
+
+      {/* AI Input - Show when AI mode is on and not editing */}
+      {!editTx && useAiMode && (
         <div className="px-8 mb-6 space-y-3">
           <div className={`glass-dark rounded-2xl p-3 flex items-center gap-3 border transition-all shadow-lg relative ${isListening ? 'border-red-500/50 shadow-red-500/20' : 'border-white/10'}`}>
             <div className={`p-2 transition-colors shrink-0 ${isListening ? 'text-red-500 animate-pulse' : 'text-gold-primary'}`}>
@@ -245,88 +268,93 @@ const ScreenAdd = ({ editTx, setEditTx, setActiveTab, showNotification, requestC
         </div>
       )}
 
-      {/* Amount Input */}
-      <div className="flex flex-col items-center py-8">
-        <div className="flex gap-2 mb-8 bg-white/5 p-1.5 rounded-full border border-white/10">
-          <button
-            onClick={() => setType('expense')}
-            className={`px-8 py-2.5 rounded-full font-black text-xs transition-all ${type === 'expense' ? 'gold-bg text-black shadow-lg shadow-gold-900/20' : 'text-gray-500'}`}
-          >
-            จ่าย
-          </button>
-          <button
-            onClick={() => setType('income')}
-            className={`px-8 py-2.5 rounded-full font-black text-xs transition-all ${type === 'income' ? 'gold-bg text-black shadow-lg shadow-gold-900/20' : 'text-gray-500'}`}
-          >
-            รับ
-          </button>
-        </div>
-        <div className="relative">
-          <input
-            type="number"
-            value={amount}
-            onChange={e => setAmount(e.target.value)}
-            className="amount-input text-7xl font-black bg-transparent text-center outline-none text-white tracking-tighter w-full"
-            placeholder="0"
-          />
-        </div>
-        <div className="flex gap-3 mt-8">
-          <input
-            type="date"
-            value={date}
-            onChange={e => setDate(e.target.value)}
-            className="bg-white/5 border border-white/10 px-6 py-3 rounded-2xl text-sm font-bold text-gray-300 outline-none focus:border-gold-primary/30 transition-all min-w-[180px]"
-          />
-        </div>
-      </div>
-
-      {/* Category Selection */}
-      <div className="glass-dark flex-1 rounded-t-[3rem] p-8 pb-32 shadow-2xl overflow-y-auto border-t border-white/10">
-        <form onSubmit={handleSubmit} className="space-y-8">
-          {/* Horizontal scrollable category pills */}
-          <div className="overflow-x-auto hide-scroll -mx-2 px-2">
-            <div className="flex gap-3 pb-2" style={{ width: 'max-content' }}>
-              {categories.filter(c => c.type === type).map(cat => (
-                <button
-                  key={cat.id}
-                  type="button"
-                  onClick={() => setCategoryId(cat.id)}
-                  className={`flex items-center gap-2 px-4 py-3 rounded-full transition-all whitespace-nowrap ${categoryId === cat.id ? 'ring-2 ring-gold-primary shadow-lg' : 'hover:bg-white/10'}`}
-                  style={{ 
-                    backgroundColor: categoryId === cat.id ? cat.color : 'rgba(255,255,255,0.05)',
-                    boxShadow: categoryId === cat.id ? `0 4px 15px -3px ${cat.color}66` : 'none'
-                  }}
-                >
-                  <div
-                    className="w-8 h-8 rounded-full text-white flex items-center justify-center font-black text-sm"
-                    style={{ backgroundColor: categoryId === cat.id ? 'rgba(0,0,0,0.2)' : cat.color }}
-                  >
-                    {cat.name[0]}
-                  </div>
-                  <span className={`text-sm font-bold ${categoryId === cat.id ? 'text-white' : 'text-gray-400'}`}>
-                    {cat.name}
-                  </span>
-                </button>
-              ))}
+      {/* Manual Input - Show when manual mode is on OR when editing */}
+      {(editTx || !useAiMode) && (
+        <>
+          {/* Amount Input */}
+          <div className="flex flex-col items-center py-8">
+            <div className="flex gap-2 mb-8 bg-white/5 p-1.5 rounded-full border border-white/10">
+              <button
+                onClick={() => setType('expense')}
+                className={`px-8 py-2.5 rounded-full font-black text-xs transition-all ${type === 'expense' ? 'gold-bg text-black shadow-lg shadow-gold-900/20' : 'text-gray-500'}`}
+              >
+                จ่าย
+              </button>
+              <button
+                onClick={() => setType('income')}
+                className={`px-8 py-2.5 rounded-full font-black text-xs transition-all ${type === 'income' ? 'gold-bg text-black shadow-lg shadow-gold-900/20' : 'text-gray-500'}`}
+              >
+                รับ
+              </button>
+            </div>
+            <div className="relative">
+              <input
+                type="number"
+                value={amount}
+                onChange={e => setAmount(e.target.value)}
+                className="amount-input text-7xl font-black bg-transparent text-center outline-none text-white tracking-tighter w-full"
+                placeholder="0"
+              />
+            </div>
+            <div className="flex gap-3 mt-8">
+              <input
+                type="date"
+                value={date}
+                onChange={e => setDate(e.target.value)}
+                className="bg-white/5 border border-white/10 px-6 py-3 rounded-2xl text-sm font-bold text-gray-300 outline-none focus:border-gold-primary/30 transition-all min-w-[180px]"
+              />
             </div>
           </div>
-          <div className="relative">
-            <input
-              type="text"
-              value={note}
-              onChange={e => setNote(e.target.value)}
-              className="w-full p-5 bg-white/5 border border-white/10 rounded-[1.5rem] outline-none font-bold text-white focus:border-gold-primary/30 transition-all"
-              placeholder="บันทึกเพิ่มเติม..."
-            />
+
+          {/* Category Selection */}
+          <div className="glass-dark flex-1 rounded-t-[3rem] p-8 pb-32 shadow-2xl overflow-y-auto border-t border-white/10">
+            <form onSubmit={handleSubmit} className="space-y-8">
+              {/* Horizontal scrollable category pills */}
+              <div className="overflow-x-auto hide-scroll -mx-2 px-2">
+                <div className="flex gap-3 pb-2" style={{ width: 'max-content' }}>
+                  {categories.filter(c => c.type === type).map(cat => (
+                    <button
+                      key={cat.id}
+                      type="button"
+                      onClick={() => setCategoryId(cat.id)}
+                      className={`flex items-center gap-2 px-4 py-3 rounded-full transition-all whitespace-nowrap ${categoryId === cat.id ? 'ring-2 ring-gold-primary shadow-lg' : 'hover:bg-white/10'}`}
+                      style={{ 
+                        backgroundColor: categoryId === cat.id ? cat.color : 'rgba(255,255,255,0.05)',
+                        boxShadow: categoryId === cat.id ? `0 4px 15px -3px ${cat.color}66` : 'none'
+                      }}
+                    >
+                      <div
+                        className="w-8 h-8 rounded-full text-white flex items-center justify-center font-black text-sm"
+                        style={{ backgroundColor: categoryId === cat.id ? 'rgba(0,0,0,0.2)' : cat.color }}
+                      >
+                        {cat.name[0]}
+                      </div>
+                      <span className={`text-sm font-bold ${categoryId === cat.id ? 'text-white' : 'text-gray-400'}`}>
+                        {cat.name}
+                      </span>
+                    </button>
+                  ))}
+                </div>
+              </div>
+              <div className="relative">
+                <input
+                  type="text"
+                  value={note}
+                  onChange={e => setNote(e.target.value)}
+                  className="w-full p-5 bg-white/5 border border-white/10 rounded-[1.5rem] outline-none font-bold text-white focus:border-gold-primary/30 transition-all"
+                  placeholder="บันทึกเพิ่มเติม..."
+                />
+              </div>
+              <button
+                type="submit"
+                className="w-full py-5 gold-bg text-black rounded-[1.5rem] font-black text-lg shadow-2xl shadow-gold-900/30 active:scale-[0.98] transition-all"
+              >
+                บันทึกรายการ
+              </button>
+            </form>
           </div>
-          <button
-            type="submit"
-            className="w-full py-5 gold-bg text-black rounded-[1.5rem] font-black text-lg shadow-2xl shadow-gold-900/30 active:scale-[0.98] transition-all"
-          >
-            บันทึกรายการ
-          </button>
-        </form>
-      </div>
+        </>
+      )}
     </div>
   );
 };
