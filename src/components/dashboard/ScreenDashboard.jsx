@@ -24,6 +24,7 @@ const ScreenDashboard = ({ activeWalletId, setActiveWalletId }) => {
   }, []);
 
   const [selMonth, setSelMonth] = useState(monthOptions[0]);
+  const [showCumulative, setShowCumulative] = useState(false); // Toggle for monthly vs cumulative savings
 
   const filtered = transactions.filter(t =>
     t.date >= selMonth.startDate &&
@@ -51,6 +52,20 @@ const ScreenDashboard = ({ activeWalletId, setActiveWalletId }) => {
   const daysInMonth = new Date(selMonth.endDate).getDate();
   const avgExp = totalExpAll / daysInMonth;
   const avgInc = totalIncAll / daysInMonth;
+
+  // Cumulative savings (all-time)
+  const cumulativeExpense = transactions.filter(t =>
+    t.type === 'expense' &&
+    (activeWalletId === 'all' || t.walletId === activeWalletId)
+  ).reduce((s, t) => s + Number(t.amount), 0);
+
+  const cumulativeIncome = transactions.filter(t =>
+    t.type === 'income' &&
+    (activeWalletId === 'all' || t.walletId === activeWalletId)
+  ).reduce((s, t) => s + Number(t.amount), 0);
+
+  const cumulativeSavings = cumulativeIncome - cumulativeExpense;
+  const monthlySavings = totalIncAll - totalExpAll;
 
   const trendData = useMemo(() => {
     const data = [];
@@ -119,9 +134,27 @@ const ScreenDashboard = ({ activeWalletId, setActiveWalletId }) => {
       {/* Net Balance Card */}
       <div className="glass-dark p-8 rounded-[2.5rem] shadow-2xl mb-8 text-center border border-white/10 relative overflow-hidden">
         <div className="absolute top-0 left-0 w-full h-1 gold-bg opacity-50"></div>
-        <div className="text-sm font-black gold-text uppercase tracking-[0.2em] mb-2 opacity-80">เงินเหลือเก็บสุทธิ</div>
+        
+        {/* Toggle for monthly vs cumulative */}
+        <div className="flex justify-center mb-3">
+          <div className="flex gap-1 bg-white/5 p-1 rounded-full border border-white/10">
+            <button
+              onClick={() => setShowCumulative(false)}
+              className={`px-4 py-1.5 rounded-full font-black text-[10px] transition-all ${!showCumulative ? 'gold-bg text-black shadow-lg' : 'text-gray-500'}`}
+            >
+              เหลือเก็บ
+            </button>
+            <button
+              onClick={() => setShowCumulative(true)}
+              className={`px-4 py-1.5 rounded-full font-black text-[10px] transition-all ${showCumulative ? 'gold-bg text-black shadow-lg' : 'text-gray-500'}`}
+            >
+              เหลือเก็บสะสม
+            </button>
+          </div>
+        </div>
+
         <div className="text-5xl font-black text-white tracking-tighter mb-4">
-          {formatCurrency(totalIncAll - totalExpAll).replace('฿', '')}
+          {formatCurrency(showCumulative ? cumulativeSavings : monthlySavings).replace('฿', '')}
           <span className="text-lg gold-text ml-1">฿</span>
         </div>
         <TrendChart data={trendData} color="#D4AF37" />
