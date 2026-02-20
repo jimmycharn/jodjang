@@ -176,7 +176,6 @@ const ScreenAdd = ({ editTx, setEditTx, setActiveTab, showNotification, requestC
     showNotification(`กำลังอ่านสลิป ${totalFiles} รูป...`, 'success');
 
     const geminiKey = import.meta.env.VITE_GEMINI_API_KEY;
-    const groqKey = import.meta.env.VITE_GROQ_API_KEY;
 
     let successCount = 0;
     let skipCount = 0;
@@ -202,7 +201,7 @@ const ScreenAdd = ({ editTx, setEditTx, setActiveTab, showNotification, requestC
         reader.readAsDataURL(file);
         const base64Image = await base64Promise;
 
-        const res = await readSlipWithAI(base64Image, geminiKey, groqKey);
+        const res = await readSlipWithAI(base64Image, geminiKey);
         
         if (res) {
           // Check duplicate by ref

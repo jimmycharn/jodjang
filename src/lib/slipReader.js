@@ -1,4 +1,4 @@
-export const readSlipWithAI = async (base64Image, geminiKey, groqKey) => {
+export const readSlipWithAI = async (base64Image, geminiKey) => {
   // Prompt to extract information from slip (Thai bank slips)
   const prompt = `วิเคราะห์รูปสลิปธนาคารนี้และดึงข้อมูลออกมาเป็น JSON:
 {
@@ -10,44 +10,17 @@ export const readSlipWithAI = async (base64Image, geminiKey, groqKey) => {
 }
 ตอบเป็น JSON เท่านั้น ห้ามใส่ markdown หรือข้อความอื่น`;
 
-  // Check if we have at least one API key
-  if (!geminiKey && !groqKey) {
-    throw new Error("ไม่พบ API Key สำหรับอ่านสลิป");
+  if (!geminiKey) {
+    throw new Error("ไม่พบ VITE_GEMINI_API_KEY ใน .env");
   }
 
-  // Try Gemini first
-  if (geminiKey) {
-    try {
-      console.log("Attempting to read with Gemini...");
-      const geminiResult = await tryGemini(base64Image, prompt, geminiKey);
-      return { ...geminiResult, source: 'gemini' };
-    } catch (err) {
-      console.warn("Gemini failed:", err.message);
-      // If Groq is available, try it as fallback
-      if (groqKey) {
-        console.log("Falling back to Groq...");
-        try {
-          const groqResult = await tryGroq(base64Image, prompt, groqKey);
-          return { ...groqResult, source: 'groq' };
-        } catch (groqErr) {
-          console.error("Groq also failed:", groqErr.message);
-          throw new Error("ไม่สามารถอ่านสลิปได้ กรุณาลองใหม่");
-        }
-      }
-      throw new Error("Gemini: " + err.message);
-    }
-  }
-
-  // If only Groq is available
-  if (groqKey) {
-    try {
-      console.log("Using Groq...");
-      const groqResult = await tryGroq(base64Image, prompt, groqKey);
-      return { ...groqResult, source: 'groq' };
-    } catch (groqErr) {
-      console.error("Groq failed:", groqErr.message);
-      throw new Error("Groq: " + groqErr.message);
-    }
+  try {
+    console.log("Reading slip with Gemini...");
+    const geminiResult = await tryGemini(base64Image, prompt, geminiKey);
+    return { ...geminiResult, source: 'gemini' };
+  } catch (err) {
+    console.error("Gemini failed:", err.message);
+    throw new Error("ไม่สามารถอ่านสลิปได้: " + err.message);
   }
 };
 
@@ -98,50 +71,3 @@ const tryGemini = async (base64Image, prompt, apiKey) => {
   }
 };
 
-const tryGroq = async (base64Image, prompt, apiKey) => {
-  // Ensure we have the full data URI for Groq
-  const dataUrl = base64Image.includes('data:image') 
-    ? base64Image 
-    : `data:image/jpeg;base64,${base64Image}`;
-
-  const response = await fetch("https://api.groq.com/openai/v1/chat/completions", {
-    method: 'POST',
-    headers: {
-      'Authorization': `Bearer ${apiKey}`,
-      'Content-Type': 'application/json'
-    },
-    body: JSON.stringify({
-      model: "llama-3.2-90b-vision-preview",
-      messages: [
-        {
-          role: "user",
-          content: [
-            { type: "text", text: prompt },
-            {
-              type: "image_url",
-              image_url: {
-                url: dataUrl
-              }
-            }
-          ]
-        }
-      ],
-      temperature: 0.1,
-      response_format: { type: "json_object" }
-    })
-  });
-
-  if (!response.ok) {
-    const errorData = await response.json();
-    throw new Error(`Groq Error: ${response.status} - ${JSON.stringify(errorData)}`);
-  }
-
-  const data = await response.json();
-  const text = data.choices[0].message.content;
-  
-  try {
-    return JSON.parse(text);
-  } catch (e) {
-    throw new Error("Failed to parse Groq response as JSON");
-  }
-};
