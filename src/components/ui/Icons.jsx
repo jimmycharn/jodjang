@@ -36,7 +36,9 @@ import {
   XCircle,
   MicOff,
   Ban,
-  Edit
+  Edit,
+  Image as ImageIcon,
+  Upload
 } from 'lucide-react';
 
 export const Icons = {
@@ -77,7 +79,9 @@ export const Icons = {
   XCircle,
   MicOff,
   Ban,
-  Edit
+  Edit,
+  ImageIcon,
+  Upload
 };
 
 export default Icons;

@@ -5,6 +5,7 @@ import { usePackage } from '../../context/PackageContext';
 import { Icons } from '../ui/Icons';
 import { toLocalDateString, generateId } from '../../lib/utils';
 import { processWithGemini } from '../../services/geminiService';
+import { readSlipWithAI } from '../../lib/slipReader';
 
 const ScreenAdd = ({ editTx, setEditTx, setActiveTab, showNotification, requestConfirm, setActiveWalletId }) => {
   const { user } = useAuth();
@@ -19,9 +20,11 @@ const ScreenAdd = ({ editTx, setEditTx, setActiveTab, showNotification, requestC
   const [note, setNote] = useState(editTx ? editTx.note : '');
   const [aiText, setAiText] = useState('');
   const [aiLoading, setAiLoading] = useState(false);
+  const [slipLoading, setSlipLoading] = useState(false);
   const [isListening, setIsListening] = useState(false);
   const [useAiMode, setUseAiMode] = useState(true); // Default to AI mode for new transactions
   const aiInputRef = useRef(null);
+  const fileInputRef = useRef(null);
   const recogRef = useRef(null);
 
   const handleVoiceInput = async () => {
@@ -164,6 +167,75 @@ const ScreenAdd = ({ editTx, setEditTx, setActiveTab, showNotification, requestC
     }
   };
 
+  const handleSlipUpload = async (e) => {
+    const file = e.target.files?.[0];
+    if (!file) return;
+
+    // Optional: Limit file size to avoid sending huge images (e.g. max 5MB)
+    if (file.size > 5 * 1024 * 1024) {
+      showNotification('ขนาดรูปภาพใหญ่เกินไป (สูงสุด 5MB)', 'error');
+      return;
+    }
+
+    setSlipLoading(true);
+    showNotification('กำลังอ่านข้อมูลจากสลิป...', 'success');
+
+    try {
+      // Read file as base64
+      const reader = new FileReader();
+      const base64Promise = new Promise((resolve, reject) => {
+        reader.onload = () => resolve(reader.result);
+        reader.onerror = reject;
+      });
+      reader.readAsDataURL(file);
+      const base64Image = await base64Promise;
+
+      const geminiKey = import.meta.env.VITE_GEMINI_API_KEY;
+      const groqKey = import.meta.env.VITE_GROQ_API_KEY;
+
+      const res = await readSlipWithAI(base64Image, geminiKey, groqKey);
+      
+      if (res) {
+        // Find duplicate by ref if available
+        if (res.ref) {
+          const isDuplicate = transactions.some(t => t.note?.includes(res.ref));
+          if (isDuplicate) {
+            showNotification('สลิปนี้เคยถูกบันทึกไปแล้ว!', 'error');
+            setSlipLoading(false);
+            return;
+          }
+        }
+
+        // Fill form
+        if (res.amount) setAmount(String(res.amount));
+        if (res.type) setType(res.type);
+        if (res.date) setDate(res.date);
+        
+        let finalNote = res.note || 'สลิปโอนเงิน';
+        if (res.ref) finalNote += ` (Ref: ${res.ref})`;
+        setNote(finalNote);
+
+        // Try to auto-select category
+        if (res.categoryName) {
+           const cat = categories.find(c =>
+             (c.name.toLowerCase() === res.categoryName.toLowerCase() || res.categoryName.includes(c.name)) && c.type === res.type
+           ) || categories.find(c => c.name === 'อื่นๆ' && c.type === res.type);
+           if (cat) setCategoryId(cat.id);
+        }
+
+        setUseAiMode(false); // Switch to manual mode so user can review and save
+        showNotification('อ่านข้อมูลสำเร็จ กรุณาตรวจสอบและกดบันทึก', 'success');
+      }
+    } catch (error) {
+      console.error("Slip reading error:", error);
+      showNotification('ไม่สามารถอ่านข้อมูลสลิปได้: ' + error.message, 'error');
+    } finally {
+      setSlipLoading(false);
+      // Reset input so user can upload the same file again if needed
+      if (fileInputRef.current) fileInputRef.current.value = '';
+    }
+  };
+
   const handleSubmit = (e) => {
     e.preventDefault();
     processSave({ amount: parseFloat(amount), type, date, categoryId, walletId, note });
@@ -246,24 +318,41 @@ const ScreenAdd = ({ editTx, setEditTx, setActiveTab, showNotification, requestC
               value={aiText}
               onChange={e => setAiText(e.target.value)}
               onKeyPress={e => e.key === 'Enter' && handleAI()}
-              className="flex-1 bg-transparent outline-none text-sm font-bold text-white placeholder:text-gray-600 min-w-0 pr-10"
+              className="flex-1 bg-transparent outline-none text-sm font-bold text-white placeholder:text-gray-600 min-w-0 pr-20"
               placeholder="พิมพ์หรือพูด เช่น 'กินข้าว 50 บาท'..."
             />
-            {!/Line/i.test(navigator.userAgent) && pkgFeatures.voice && (
+            <div className="absolute right-2 top-1/2 -translate-y-1/2 flex items-center gap-1">
+              {!/Line/i.test(navigator.userAgent) && pkgFeatures.voice && (
+                <button
+                  onClick={handleVoiceInput}
+                  className={`p-2 rounded-xl transition-all ${isListening ? 'bg-red-500 text-white animate-pulse' : 'text-gray-400 hover:text-white'}`}
+                >
+                  <Icons.Mic size={20} />
+                </button>
+              )}
               <button
-                onClick={handleVoiceInput}
-                className={`absolute right-2 top-1/2 -translate-y-1/2 p-2 rounded-xl transition-all ${isListening ? 'bg-red-500 text-white animate-pulse' : 'text-gray-400 hover:text-white'}`}
+                onClick={() => fileInputRef.current?.click()}
+                disabled={slipLoading}
+                className={`p-2 rounded-xl transition-all ${slipLoading ? 'text-gold-primary animate-pulse' : 'text-gray-400 hover:text-white'}`}
+                title="อัพโหลดรูปสลิป"
               >
-                <Icons.Mic size={20} />
+                <Icons.ImageIcon size={20} />
               </button>
-            )}
+              <input 
+                type="file" 
+                ref={fileInputRef} 
+                onChange={handleSlipUpload} 
+                accept="image/*" 
+                className="hidden" 
+              />
+            </div>
           </div>
           <button
             onClick={handleAI}
-            disabled={aiLoading}
+            disabled={aiLoading || slipLoading}
             className="w-full py-3 gold-bg text-black rounded-xl font-black text-xs active:scale-95 transition-all shadow-lg shadow-gold-900/20 disabled:opacity-50"
           >
-            {aiLoading ? '...' : 'วิเคราะห์ด้วย AI'}
+            {aiLoading ? '...' : slipLoading ? 'กำลังอ่านสลิป...' : 'วิเคราะห์ด้วย AI'}
           </button>
         </div>
       )}
