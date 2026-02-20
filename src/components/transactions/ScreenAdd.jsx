@@ -111,7 +111,19 @@ const ScreenAdd = ({ editTx, setEditTx, setActiveTab, showNotification, requestC
   }, [editTx]);
 
   const processSave = async (txData) => {
-    if (!txData.amount || !txData.categoryId || !txData.walletId) return false;
+    // Validate required fields
+    if (!txData.amount || isNaN(txData.amount)) {
+      showNotification('กรุณาระบุจำนวนเงิน', 'error');
+      return false;
+    }
+    if (!txData.categoryId) {
+      showNotification('กรุณาเลือกหมวดหมู่', 'error');
+      return false;
+    }
+    if (!txData.walletId) {
+      showNotification('กรุณาเลือกกระเป๋าเงิน', 'error');
+      return false;
+    }
     
     const newTx = { ...txData, id: editTx ? editTx.id : generateId() };
     
@@ -121,7 +133,13 @@ const ScreenAdd = ({ editTx, setEditTx, setActiveTab, showNotification, requestC
       setTransactions(prev => [newTx, ...prev]);
     }
     
-    await saveTransaction(newTx, !!editTx);
+    const result = await saveTransaction(newTx, !!editTx);
+    if (result?.error) {
+      showNotification('บันทึกไม่สำเร็จ: ' + result.error, 'error');
+      return false;
+    }
+    
+    showNotification('บันทึกรายการเรียบร้อย', 'success');
     setActiveWalletId(newTx.walletId);
     setActiveTab('history');
     setEditTx(null);
