@@ -168,72 +168,121 @@ const ScreenAdd = ({ editTx, setEditTx, setActiveTab, showNotification, requestC
   };
 
   const handleSlipUpload = async (e) => {
-    const file = e.target.files?.[0];
-    if (!file) return;
-
-    // Optional: Limit file size to avoid sending huge images (e.g. max 5MB)
-    if (file.size > 5 * 1024 * 1024) {
-      showNotification('ขนาดรูปภาพใหญ่เกินไป (สูงสุด 5MB)', 'error');
-      return;
-    }
+    const files = e.target.files;
+    if (!files || files.length === 0) return;
 
     setSlipLoading(true);
-    showNotification('กำลังอ่านข้อมูลจากสลิป...', 'success');
+    const totalFiles = files.length;
+    showNotification(`กำลังอ่านสลิป ${totalFiles} รูป...`, 'success');
 
-    try {
-      // Read file as base64
-      const reader = new FileReader();
-      const base64Promise = new Promise((resolve, reject) => {
-        reader.onload = () => resolve(reader.result);
-        reader.onerror = reject;
-      });
-      reader.readAsDataURL(file);
-      const base64Image = await base64Promise;
+    const geminiKey = import.meta.env.VITE_GEMINI_API_KEY;
+    const groqKey = import.meta.env.VITE_GROQ_API_KEY;
 
-      const geminiKey = import.meta.env.VITE_GEMINI_API_KEY;
-      const groqKey = import.meta.env.VITE_GROQ_API_KEY;
+    let successCount = 0;
+    let skipCount = 0;
+    let errorCount = 0;
+    let lastResult = null;
 
-      const res = await readSlipWithAI(base64Image, geminiKey, groqKey);
+    for (let i = 0; i < files.length; i++) {
+      const file = files[i];
       
-      if (res) {
-        // Find duplicate by ref if available
-        if (res.ref) {
-          const isDuplicate = transactions.some(t => t.note?.includes(res.ref));
-          if (isDuplicate) {
-            showNotification('สลิปนี้เคยถูกบันทึกไปแล้ว!', 'error');
-            setSlipLoading(false);
-            return;
-          }
-        }
-
-        // Fill form
-        if (res.amount) setAmount(String(res.amount));
-        if (res.type) setType(res.type);
-        if (res.date) setDate(res.date);
-        
-        let finalNote = res.note || 'สลิปโอนเงิน';
-        if (res.ref) finalNote += ` (Ref: ${res.ref})`;
-        setNote(finalNote);
-
-        // Try to auto-select category
-        if (res.categoryName) {
-           const cat = categories.find(c =>
-             (c.name.toLowerCase() === res.categoryName.toLowerCase() || res.categoryName.includes(c.name)) && c.type === res.type
-           ) || categories.find(c => c.name === 'อื่นๆ' && c.type === res.type);
-           if (cat) setCategoryId(cat.id);
-        }
-
-        setUseAiMode(false); // Switch to manual mode so user can review and save
-        showNotification('อ่านข้อมูลสำเร็จ กรุณาตรวจสอบและกดบันทึก', 'success');
+      // Skip files larger than 5MB
+      if (file.size > 5 * 1024 * 1024) {
+        errorCount++;
+        continue;
       }
-    } catch (error) {
-      console.error("Slip reading error:", error);
-      showNotification('ไม่สามารถอ่านข้อมูลสลิปได้: ' + error.message, 'error');
-    } finally {
-      setSlipLoading(false);
-      // Reset input so user can upload the same file again if needed
-      if (fileInputRef.current) fileInputRef.current.value = '';
+
+      try {
+        // Read file as base64
+        const reader = new FileReader();
+        const base64Promise = new Promise((resolve, reject) => {
+          reader.onload = () => resolve(reader.result);
+          reader.onerror = reject;
+        });
+        reader.readAsDataURL(file);
+        const base64Image = await base64Promise;
+
+        const res = await readSlipWithAI(base64Image, geminiKey, groqKey);
+        
+        if (res) {
+          // Check duplicate by ref
+          if (res.ref) {
+            const isDuplicate = transactions.some(t => t.note?.includes(res.ref));
+            if (isDuplicate) {
+              skipCount++;
+              continue;
+            }
+          }
+
+          // If single file, fill form for review
+          if (totalFiles === 1) {
+            lastResult = res;
+          } else {
+            // Multiple files: auto-save each one
+            let finalNote = res.note || 'สลิปโอนเงิน';
+            if (res.ref) finalNote += ` (Ref: ${res.ref})`;
+
+            const cat = categories.find(c =>
+              (c.name.toLowerCase() === (res.categoryName || '').toLowerCase() || (res.categoryName || '').includes(c.name)) && c.type === res.type
+            ) || categories.find(c => c.name === 'อื่นๆ' && c.type === res.type);
+
+            const txData = {
+              amount: res.amount,
+              type: res.type || 'expense',
+              date: res.date || toLocalDateString(new Date()),
+              categoryId: cat?.id || '',
+              walletId: walletId,
+              note: finalNote
+            };
+
+            if (txData.amount && txData.walletId) {
+              await processSave(txData);
+              successCount++;
+            } else {
+              errorCount++;
+            }
+          }
+        } else {
+          errorCount++;
+        }
+      } catch (error) {
+        console.error("Slip reading error:", error);
+        errorCount++;
+      }
     }
+
+    // Handle results
+    if (totalFiles === 1 && lastResult) {
+      // Single file: fill form for review
+      if (lastResult.amount) setAmount(String(lastResult.amount));
+      if (lastResult.type) setType(lastResult.type);
+      if (lastResult.date) setDate(lastResult.date);
+      
+      let finalNote = lastResult.note || 'สลิปโอนเงิน';
+      if (lastResult.ref) finalNote += ` (Ref: ${lastResult.ref})`;
+      setNote(finalNote);
+
+      if (lastResult.categoryName) {
+        const cat = categories.find(c =>
+          (c.name.toLowerCase() === lastResult.categoryName.toLowerCase() || lastResult.categoryName.includes(c.name)) && c.type === lastResult.type
+        ) || categories.find(c => c.name === 'อื่นๆ' && c.type === lastResult.type);
+        if (cat) setCategoryId(cat.id);
+      }
+
+      setUseAiMode(false);
+      showNotification('อ่านข้อมูลสำเร็จ กรุณาตรวจสอบและกดบันทึก', 'success');
+    } else if (totalFiles > 1) {
+      // Multiple files: show summary
+      let msg = `บันทึกสำเร็จ ${successCount} รายการ`;
+      if (skipCount > 0) msg += `, ข้าม ${skipCount} (ซ้ำ)`;
+      if (errorCount > 0) msg += `, ผิดพลาด ${errorCount}`;
+      showNotification(msg, successCount > 0 ? 'success' : 'error');
+    } else {
+      showNotification('ไม่สามารถอ่านข้อมูลสลิปได้', 'error');
+    }
+
+    setSlipLoading(false);
+    if (fileInputRef.current) fileInputRef.current.value = '';
   };
 
   const handleSubmit = (e) => {
@@ -343,6 +392,7 @@ const ScreenAdd = ({ editTx, setEditTx, setActiveTab, showNotification, requestC
                 ref={fileInputRef} 
                 onChange={handleSlipUpload} 
                 accept="image/*" 
+                multiple
                 className="hidden" 
               />
             </div>

@@ -1,36 +1,53 @@
 export const readSlipWithAI = async (base64Image, geminiKey, groqKey) => {
-  // Prompt to extract information from slip
-  const prompt = `Analyze this bank slip image and extract the following information in JSON format:
+  // Prompt to extract information from slip (Thai bank slips)
+  const prompt = `วิเคราะห์รูปสลิปธนาคารนี้และดึงข้อมูลออกมาเป็น JSON:
 {
-  "amount": <number, the transfer amount>,
-  "date": "<YYYY-MM-DD, the date of transfer>",
-  "type": "<string, 'expense' if it's an outgoing transfer/payment, 'income' if it's receiving money. Usually slips are outgoing so 'expense' is default>",
-  "note": "<string, receiver name or bank name, short description>",
-  "ref": "<string, transaction reference number if visible, otherwise empty string>"
+  "amount": <number, จำนวนเงินที่โอน>,
+  "date": "<YYYY-MM-DD, วันที่โอน>",
+  "type": "<string, 'expense' ถ้าเป็นการโอนออก/จ่ายเงิน, 'income' ถ้าเป็นการรับเงิน โดยปกติสลิปจะเป็น expense>",
+  "note": "<string, ชื่อผู้รับหรือธนาคาร คำอธิบายสั้นๆ>",
+  "ref": "<string, เลขอ้างอิงธุรกรรม ถ้าไม่มีให้ใส่ string ว่าง>"
 }
-Only return the raw JSON object, no markdown blocks or other text.`;
+ตอบเป็น JSON เท่านั้น ห้ามใส่ markdown หรือข้อความอื่น`;
+
+  // Check if we have at least one API key
+  if (!geminiKey && !groqKey) {
+    throw new Error("ไม่พบ API Key สำหรับอ่านสลิป");
+  }
 
   // Try Gemini first
-  try {
-    if (!geminiKey) throw new Error("No Gemini key provided");
-    
-    console.log("Attempting to read with Gemini...");
-    const geminiResult = await tryGemini(base64Image, prompt, geminiKey);
-    return { ...geminiResult, source: 'gemini' };
-  } catch (err) {
-    console.warn("Gemini failed:", err.message);
-    // If it's a quota error or if Gemini fails, fallback to Groq
-    if (groqKey) {
-      console.log("Falling back to Groq...");
-      try {
-        const groqResult = await tryGroq(base64Image, prompt, groqKey);
-        return { ...groqResult, source: 'groq' };
-      } catch (groqErr) {
-        console.error("Groq also failed:", groqErr.message);
-        throw new Error("Failed to read slip with both AI services.");
+  if (geminiKey) {
+    try {
+      console.log("Attempting to read with Gemini...");
+      const geminiResult = await tryGemini(base64Image, prompt, geminiKey);
+      return { ...geminiResult, source: 'gemini' };
+    } catch (err) {
+      console.warn("Gemini failed:", err.message);
+      // If Groq is available, try it as fallback
+      if (groqKey) {
+        console.log("Falling back to Groq...");
+        try {
+          const groqResult = await tryGroq(base64Image, prompt, groqKey);
+          return { ...groqResult, source: 'groq' };
+        } catch (groqErr) {
+          console.error("Groq also failed:", groqErr.message);
+          throw new Error("ไม่สามารถอ่านสลิปได้ กรุณาลองใหม่");
+        }
       }
+      throw new Error("Gemini: " + err.message);
     }
-    throw err;
+  }
+
+  // If only Groq is available
+  if (groqKey) {
+    try {
+      console.log("Using Groq...");
+      const groqResult = await tryGroq(base64Image, prompt, groqKey);
+      return { ...groqResult, source: 'groq' };
+    } catch (groqErr) {
+      console.error("Groq failed:", groqErr.message);
+      throw new Error("Groq: " + groqErr.message);
+    }
   }
 };
 
