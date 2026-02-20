@@ -2,6 +2,7 @@ import { useState, useEffect, useRef, useCallback } from 'react';
 import { useData } from '../../context/DataContext';
 import { formatCurrency, toLocalDateString } from '../../lib/utils';
 import { Icons } from '../ui/Icons';
+import ConfirmModal from '../ui/ConfirmModal';
 
 const ScreenHistory = ({ activeWalletId, setActiveWalletId, setEditTx, setActiveTab, onSelectModeChange }) => {
   const { transactions, categories, wallets, deleteTransaction, setTransactions } = useData();
@@ -14,6 +15,7 @@ const ScreenHistory = ({ activeWalletId, setActiveWalletId, setEditTx, setActive
   const [selectMode, setSelectMode] = useState(false);
   const [selectedIds, setSelectedIds] = useState(new Set());
   const [isDeleting, setIsDeleting] = useState(false);
+  const [showDeleteConfirm, setShowDeleteConfirm] = useState(false);
   const searchInputRef = useRef(null);
   const longPressTimerRef = useRef(null);
 
@@ -55,8 +57,13 @@ const ScreenHistory = ({ activeWalletId, setActiveWalletId, setEditTx, setActive
     });
   };
 
-  const handleDeleteSelected = async () => {
+  const handleDeleteSelected = () => {
     if (selectedIds.size === 0) return;
+    setShowDeleteConfirm(true);
+  };
+
+  const confirmDelete = async () => {
+    setShowDeleteConfirm(false);
     setIsDeleting(true);
     for (const id of selectedIds) {
       await deleteTransaction(id);
@@ -330,6 +337,16 @@ const ScreenHistory = ({ activeWalletId, setActiveWalletId, setEditTx, setActive
           </div>
         </div>
       )}
+
+      {/* Delete Confirmation Modal */}
+      <ConfirmModal
+        isOpen={showDeleteConfirm}
+        title="ลบรายการ?"
+        message={`ยืนยันลบรายการนี้?`}
+        onConfirm={confirmDelete}
+        onCancel={() => setShowDeleteConfirm(false)}
+        type="danger"
+      />
     </div>
   );
 };
