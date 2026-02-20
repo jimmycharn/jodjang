@@ -243,7 +243,10 @@ const ScreenAdd = ({ editTx, setEditTx, setActiveTab, showNotification, requestC
 
             const cat = categories.find(c =>
               (c.name.toLowerCase() === (res.categoryName || '').toLowerCase() || (res.categoryName || '').includes(c.name)) && c.type === res.type
-            ) || categories.find(c => c.name === 'อื่นๆ' && c.type === res.type);
+            ) || categories.find(c => c.name === 'ช๊อปปิ้ง' && c.type === res.type)
+              || categories.find(c => c.name === 'ช้อปปิ้ง' && c.type === res.type)
+              || categories.find(c => c.name === 'Shopping' && c.type === res.type)
+              || categories.find(c => c.name === 'อื่นๆ' && c.type === res.type);
 
             const txData = {
               amount: res.amount,
