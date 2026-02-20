@@ -199,6 +199,7 @@ const ScreenAdd = ({ editTx, setEditTx, setActiveTab, showNotification, requestC
     let skipCount = 0;
     let errorCount = 0;
     let lastResult = null;
+    let isDuplicateSingle = false;
 
     for (let i = 0; i < files.length; i++) {
       const file = files[i];
@@ -227,6 +228,7 @@ const ScreenAdd = ({ editTx, setEditTx, setActiveTab, showNotification, requestC
             const isDuplicate = transactions.some(t => t.note?.includes(res.ref));
             if (isDuplicate) {
               skipCount++;
+              if (totalFiles === 1) isDuplicateSingle = true;
               continue;
             }
           }
@@ -294,6 +296,8 @@ const ScreenAdd = ({ editTx, setEditTx, setActiveTab, showNotification, requestC
       if (skipCount > 0) msg += `, ข้าม ${skipCount} (ซ้ำ)`;
       if (errorCount > 0) msg += `, ผิดพลาด ${errorCount}`;
       showNotification(msg, successCount > 0 ? 'success' : 'error');
+    } else if (isDuplicateSingle) {
+      showNotification('สลิปนี้บันทึกข้อมูลแล้ว', 'warning');
     } else {
       showNotification('ไม่สามารถอ่านข้อมูลสลิปได้', 'error');
     }
