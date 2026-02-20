@@ -188,24 +188,24 @@ const ScreenAdmin = ({ onBack }) => {
               <div className="text-xs text-gray-500 font-bold">ใช้งานเดือนนี้</div>
             </div>
 
-            <div className="glass-dark p-5 rounded-xl border border-white/10">
+            <div className="glass-dark p-5 rounded-xl border border-white/10 dark:bg-white/5 bg-red-500/10 dark:border-white/10 border-red-500/30">
               <div className="flex items-center gap-2 mb-3">
                 <div className="w-8 h-8 rounded-xl bg-red-500/20 flex items-center justify-center">
-                  <Icons.TrendingUp size={16} className="text-red-400" />
+                  <Icons.TrendingUp size={16} className="text-red-400 dark:text-red-400 text-red-600" />
                 </div>
               </div>
-              <div className="text-lg font-black text-white">{formatCurrency(stats.totalExpense)}</div>
-              <div className="text-xs text-gray-500 font-bold">รายจ่ายเดือนนี้</div>
+              <div className="text-lg font-black text-white dark:text-white text-red-600">{formatCurrency(stats.totalExpense)}</div>
+              <div className="text-xs text-gray-500 dark:text-gray-500 text-red-600 font-bold">รายจ่ายเดือนนี้</div>
             </div>
 
-            <div className="glass-dark p-5 rounded-xl border border-white/10">
+            <div className="glass-dark p-5 rounded-xl border border-white/10 dark:bg-white/5 bg-green-500/10 dark:border-white/10 border-green-500/30">
               <div className="flex items-center gap-2 mb-3">
                 <div className="w-8 h-8 rounded-xl bg-gold-primary/20 flex items-center justify-center">
-                  <Icons.DollarSign size={16} className="text-gold-primary" />
+                  <Icons.DollarSign size={16} className="text-gold-primary dark:text-gold-primary text-green-600" />
                 </div>
               </div>
-              <div className="text-lg font-black text-white">{formatCurrency(stats.totalIncome)}</div>
-              <div className="text-xs text-gray-500 font-bold">รายรับเดือนนี้</div>
+              <div className="text-lg font-black text-white dark:text-white text-green-600">{formatCurrency(stats.totalIncome)}</div>
+              <div className="text-xs text-gray-500 dark:text-gray-500 text-green-600 font-bold">รายรับเดือนนี้</div>
             </div>
           </div>
 
@@ -223,7 +223,7 @@ const ScreenAdmin = ({ onBack }) => {
               </div>
               <div className="flex justify-between items-center">
                 <span className="text-sm text-gray-400 font-bold">เงินสุทธิเดือนนี้</span>
-                <span className={`text-sm font-black ${stats.totalIncome - stats.totalExpense >= 0 ? 'text-green-400' : 'text-red-400'}`}>
+                <span className={`text-sm font-black ${stats.totalIncome - stats.totalExpense >= 0 ? 'text-green-400 dark:text-green-400 text-green-600' : 'text-red-400 dark:text-red-400 text-red-600'}`}>
                   {formatCurrency(stats.totalIncome - stats.totalExpense)}
                 </span>
               </div>
@@ -246,7 +246,7 @@ const ScreenAdmin = ({ onBack }) => {
                       <div className="text-sm font-black text-white truncate">{u.name || u.username}</div>
                       <div className="text-xs text-gray-500">{u.monthTx} รายการเดือนนี้</div>
                     </div>
-                    <div className="text-xs font-bold text-gray-400">{formatCurrency(u.expense)}</div>
+                    <div className="text-xs font-bold text-gray-400 dark:text-gray-400 text-red-600">{formatCurrency(u.expense)}</div>
                   </div>
                 ))}
             </div>
@@ -290,11 +290,11 @@ const ScreenAdmin = ({ onBack }) => {
               <div className="grid grid-cols-3 gap-3 mt-4 pt-4 border-t border-white/5">
                 <div>
                   <div className="text-[10px] text-gray-500 font-bold">รายจ่าย</div>
-                  <div className="text-xs font-black text-red-400">{formatCurrency(u.expense)}</div>
+                  <div className="text-xs font-black text-red-400 dark:text-red-400 text-red-600">{formatCurrency(u.expense)}</div>
                 </div>
                 <div>
                   <div className="text-[10px] text-gray-500 font-bold">รายรับ</div>
-                  <div className="text-xs font-black text-green-400">{formatCurrency(u.income)}</div>
+                  <div className="text-xs font-black text-green-400 dark:text-green-400 text-green-600">{formatCurrency(u.income)}</div>
                 </div>
                 <div>
                   <div className="text-[10px] text-gray-500 font-bold">กระเป๋า</div>
@@ -357,13 +357,13 @@ const ScreenAdmin = ({ onBack }) => {
 
           {/* User Summary Cards */}
           <div className="grid grid-cols-2 gap-4">
-            <div className="glass-dark p-5 rounded-xl border border-white/10">
-              <div className="text-xs text-gray-500 font-bold mb-1">รายจ่ายเดือนนี้</div>
-              <div className="text-xl font-black text-red-400">{formatCurrency(selectedUserData.expense)}</div>
+            <div className="glass-dark p-5 rounded-xl border border-white/10 dark:bg-white/5 bg-red-500/10 dark:border-white/10 border-red-500/30">
+              <div className="text-xs text-gray-500 dark:text-gray-500 text-red-600 font-bold mb-1">รายจ่ายเดือนนี้</div>
+              <div className="text-xl font-black text-red-400 dark:text-red-400 text-red-600">{formatCurrency(selectedUserData.expense)}</div>
             </div>
-            <div className="glass-dark p-5 rounded-xl border border-white/10">
-              <div className="text-xs text-gray-500 font-bold mb-1">รายรับเดือนนี้</div>
-              <div className="text-xl font-black text-green-400">{formatCurrency(selectedUserData.income)}</div>
+            <div className="glass-dark p-5 rounded-xl border border-white/10 dark:bg-white/5 bg-green-500/10 dark:border-white/10 border-green-500/30">
+              <div className="text-xs text-gray-500 dark:text-gray-500 text-green-600 font-bold mb-1">รายรับเดือนนี้</div>
+              <div className="text-xl font-black text-green-400 dark:text-green-400 text-green-600">{formatCurrency(selectedUserData.income)}</div>
             </div>
           </div>
 

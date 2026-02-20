@@ -164,19 +164,19 @@ const ScreenDashboard = ({ activeWalletId, setActiveWalletId }) => {
       <div className="grid grid-cols-2 gap-4 mb-8">
         <div
           onClick={() => setDashboardTab('expense')}
-          className={`p-5 rounded-xl border transition-all cursor-pointer ${dashboardTab === 'expense' ? 'bg-white/5 border-gold-primary/30 scale-[1.02]' : 'bg-white/5 border-transparent opacity-40'}`}
+          className={`p-5 rounded-xl border transition-all cursor-pointer ${dashboardTab === 'expense' ? 'bg-white/5 border-gold-primary/30 scale-[1.02] dark:bg-white/5 bg-red-500/10 dark:border-gold-primary/30 border-red-500/30' : 'bg-white/5 border-transparent opacity-40 dark:bg-white/5 bg-red-500/5'}`}
         >
           <div className="text-sm text-gray-500 font-black uppercase tracking-widest mb-2">รายจ่าย</div>
-          <div className="text-2xl font-black text-white">{formatCurrency(totalExpAll).replace('฿', '')}</div>
-          <div className="text-xs text-gold-primary font-bold mt-1 opacity-80">เฉลี่ย {formatCurrency(avgExp)}/วัน</div>
+          <div className="text-2xl font-black text-white dark:text-white text-red-600">{formatCurrency(totalExpAll).replace('฿', '')}</div>
+          <div className="text-xs text-gold-primary dark:text-gold-primary text-red-500 font-bold mt-1 opacity-80">เฉลี่ย {formatCurrency(avgExp)}/วัน</div>
         </div>
         <div
           onClick={() => setDashboardTab('income')}
-          className={`p-5 rounded-xl border transition-all cursor-pointer ${dashboardTab === 'income' ? 'bg-white/5 border-gold-primary/30 scale-[1.02]' : 'bg-white/5 border-transparent opacity-40'}`}
+          className={`p-5 rounded-xl border transition-all cursor-pointer ${dashboardTab === 'income' ? 'bg-white/5 border-gold-primary/30 scale-[1.02] dark:bg-white/5 bg-green-500/10 dark:border-gold-primary/30 border-green-500/30' : 'bg-white/5 border-transparent opacity-40 dark:bg-white/5 bg-green-500/5'}`}
         >
           <div className="text-sm text-gray-500 font-black uppercase tracking-widest mb-2">รายรับ</div>
-          <div className="text-2xl font-black text-white">{formatCurrency(totalIncAll).replace('฿', '')}</div>
-          <div className="text-xs text-gold-primary font-bold mt-1 opacity-80">เฉลี่ย {formatCurrency(avgInc)}/วัน</div>
+          <div className="text-2xl font-black text-white dark:text-white text-green-600">{formatCurrency(totalIncAll).replace('฿', '')}</div>
+          <div className="text-xs text-gold-primary dark:text-gold-primary text-green-500 font-bold mt-1 opacity-80">เฉลี่ย {formatCurrency(avgInc)}/วัน</div>
         </div>
       </div>
 

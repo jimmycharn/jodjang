@@ -231,7 +231,7 @@ const ScreenHistory = ({ activeWalletId, setActiveWalletId, setEditTx, setActive
                   {new Date(date).toLocaleDateString('th-TH', { dateStyle: 'long' })}
                 </div>
                 <div className="text-xs font-bold">
-                  <span className={(dailySummary.income - dailySummary.expense) >= 0 ? 'text-green-400' : 'text-red-400'}>
+                  <span className={(dailySummary.income - dailySummary.expense) >= 0 ? 'text-green-400 dark:text-green-400 text-green-600' : 'text-red-400 dark:text-red-400 text-red-600'}>
                     {(dailySummary.income - dailySummary.expense) >= 0 ? '+' : ''}
                     {(dailySummary.income - dailySummary.expense).toLocaleString()}
                   </span>
@@ -276,7 +276,7 @@ const ScreenHistory = ({ activeWalletId, setActiveWalletId, setEditTx, setActive
                           <div className="text-xs text-gray-500 font-bold">{t.note || 'ไม่มีบันทึก'}</div>
                         </div>
                       </div>
-                      <div className={`text-base font-black tracking-tight ${t.type === 'income' ? 'text-green-400' : 'text-red-400'}`}>
+                      <div className={`text-base font-black tracking-tight ${t.type === 'income' ? 'text-green-400 dark:text-green-400 text-green-600' : 'text-red-400 dark:text-red-400 text-red-600'}`}>
                         {t.type === 'income' ? '+' : '-'}{Number(t.amount).toLocaleString()}
                       </div>
                     </div>
