@@ -24,7 +24,7 @@ const ScreenMe = ({ onOpenAdmin, showNotification }) => {
   return (
     <div className="p-10 pt-20 bg-[#0a0a0a] min-h-screen flex flex-col items-center max-w-md mx-auto w-full">
       <div className="relative mb-8">
-        <div className="w-32 h-32 gold-bg rounded-[2.5rem] flex items-center justify-center text-black shadow-2xl shadow-gold-900/40 animate-pulse-slow">
+        <div className="w-32 h-32 gold-bg rounded-2xl flex items-center justify-center text-black shadow-2xl shadow-gold-900/40 animate-pulse-slow">
           <Icons.User size={64} />
         </div>
         <div className="absolute -bottom-2 -right-2 w-10 h-10 bg-green-500 border-4 border-[#0a0a0a] rounded-full"></div>
@@ -41,7 +41,7 @@ const ScreenMe = ({ onOpenAdmin, showNotification }) => {
       {/* Current Package Card */}
       <div
         onClick={() => setShowPackages(true)}
-        className="w-full glass-dark p-5 rounded-[2rem] border border-white/10 mb-6 cursor-pointer hover:border-gold-primary/30 transition-all active:scale-[0.98]"
+        className="w-full glass-dark p-5 rounded-xl border border-white/10 mb-6 cursor-pointer hover:border-gold-primary/30 transition-all active:scale-[0.98]"
       >
         <div className="flex items-center gap-4">
           <div className={`w-12 h-12 rounded-2xl flex items-center justify-center ${isPremium ? 'bg-gold-primary/20 text-gold-primary' : 'bg-gray-500/20 text-gray-400'}`}>
@@ -74,7 +74,7 @@ const ScreenMe = ({ onOpenAdmin, showNotification }) => {
         {!isPremium && (
           <button
             onClick={() => setShowPackages(true)}
-            className="w-full py-5 bg-gradient-to-r from-gold-primary/20 to-gold-primary/5 text-gold-primary rounded-[1.5rem] font-black text-lg border border-gold-primary/20 hover:border-gold-primary/40 transition-all active:scale-95 flex items-center justify-center gap-3"
+            className="w-full py-5 bg-gradient-to-r from-gold-primary/20 to-gold-primary/5 text-gold-primary rounded-xl font-black text-lg border border-gold-primary/20 hover:border-gold-primary/40 transition-all active:scale-95 flex items-center justify-center gap-3"
           >
             <Icons.Crown size={24} />
             อัพเกรดแพ็คเกจ
@@ -84,7 +84,7 @@ const ScreenMe = ({ onOpenAdmin, showNotification }) => {
         {isAdmin && (
           <button
             onClick={onOpenAdmin}
-            className="w-full py-5 bg-white/5 text-gold-primary rounded-[1.5rem] font-black text-lg border border-gold-primary/20 hover:bg-gold-primary/5 transition-all active:scale-95 flex items-center justify-center gap-3"
+            className="w-full py-5 bg-white/5 text-gold-primary rounded-xl font-black text-lg border border-gold-primary/20 hover:bg-gold-primary/5 transition-all active:scale-95 flex items-center justify-center gap-3"
           >
             <Icons.Shield size={24} />
             Admin Dashboard
@@ -92,7 +92,7 @@ const ScreenMe = ({ onOpenAdmin, showNotification }) => {
         )}
         <button
           onClick={logout}
-          className="w-full py-5 bg-white/5 text-red-500 rounded-[1.5rem] font-black text-lg border border-red-500/10 hover:bg-red-500/5 transition-all active:scale-95"
+          className="w-full py-5 bg-white/5 text-red-500 rounded-xl font-black text-lg border border-red-500/10 hover:bg-red-500/5 transition-all active:scale-95"
         >
           ออกจากระบบ
         </button>

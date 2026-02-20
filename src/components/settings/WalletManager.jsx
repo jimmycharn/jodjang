@@ -88,7 +88,7 @@ const WalletManager = ({ onClose, requestConfirm }) => {
         {/* Add Button at Top */}
         <button
           onClick={() => openEditor(null)}
-          className="w-full mb-6 py-4 rounded-[1.5rem] font-black text-black gold-bg shadow-xl shadow-gold-900/30 active:scale-[0.98] transition-all"
+          className="w-full mb-6 py-4 rounded-xl font-black text-black gold-bg shadow-xl shadow-gold-900/30 active:scale-[0.98] transition-all"
         >
           + เพิ่มกระเป๋าเงินใหม่
         </button>
@@ -103,7 +103,7 @@ const WalletManager = ({ onClose, requestConfirm }) => {
               onDragOver={(e) => onDragOver(e, index)}
               onDragEnd={onDragEnd}
               onClick={() => openEditor(w)}
-              className={`glass-dark p-5 rounded-[1.5rem] flex justify-between items-center border border-white/10 hover:border-gold-primary/30 transition-all cursor-pointer group select-none ${draggedItem === w ? 'opacity-50 scale-95 border-gold-primary border-dashed' : ''}`}
+              className={`glass-dark p-5 rounded-xl flex justify-between items-center border border-white/10 hover:border-gold-primary/30 transition-all cursor-pointer group select-none ${draggedItem === w ? 'opacity-50 scale-95 border-gold-primary border-dashed' : ''}`}
             >
               <div className="flex items-center gap-5 pointer-events-none">
                 <div

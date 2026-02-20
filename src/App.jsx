@@ -213,7 +213,7 @@ function App() {
 
         {/* Bottom Navigation - Hide when adding/editing transaction or in select mode */}
         {activeTab !== 'add' && !historySelectMode && (
-        <nav className="fixed bottom-6 left-0 right-0 mx-auto w-[calc(100%-2rem)] glass-dark border border-white/10 px-6 py-4 flex justify-between items-center z-50 max-w-md rounded-[2.5rem] shadow-2xl">
+        <nav className="fixed bottom-6 left-0 right-0 mx-auto w-[calc(100%-2rem)] glass-dark border border-white/10 px-6 py-4 flex justify-between items-center z-50 max-w-md rounded-2xl shadow-2xl">
           <button
             onClick={() => setActiveTab('dashboard')}
             className={`p-2 transition-all ${activeTab === 'dashboard' ? 'gold-text scale-125' : 'text-gray-600 hover:text-gray-400'}`}
@@ -228,7 +228,7 @@ function App() {
           </button>
           <button
             onClick={() => { setEditTx(null); setActiveTab('add'); }}
-            className="absolute left-1/2 -translate-x-1/2 -top-12 w-16 h-16 gold-bg rounded-[1.5rem] flex items-center justify-center text-black shadow-2xl shadow-gold-900/40 border-[6px] border-[#0a0a0a] active:scale-90 transition-all nav-add-glow"
+            className="absolute left-1/2 -translate-x-1/2 -top-12 w-16 h-16 gold-bg rounded-xl flex items-center justify-center text-black shadow-2xl shadow-gold-900/40 border-[6px] border-[#0a0a0a] active:scale-90 transition-all nav-add-glow"
           >
             <Icons.PlusCircle size={32} />
           </button>

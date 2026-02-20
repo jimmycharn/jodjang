@@ -71,7 +71,7 @@ const ScreenSavings = ({ requestConfirm }) => {
         {savingsGoals.map(goal => {
           const progress = Math.min((goal.currentamount / goal.targetamount) * 100, 100);
           return (
-            <div key={goal.id} className="glass-dark p-6 rounded-[2rem] border border-white/10 relative overflow-hidden group">
+            <div key={goal.id} className="glass-dark p-6 rounded-xl border border-white/10 relative overflow-hidden group">
               <div className="flex justify-between items-start mb-4">
                 <div className="flex items-center gap-4">
                   <div

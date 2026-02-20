@@ -5,7 +5,7 @@ const ConfirmModal = ({ isOpen, title, message, onConfirm, onCancel, type = 'dan
   
   return (
     <div className="fixed inset-0 z-[100] flex items-center justify-center p-6 bg-black/60 backdrop-blur-md animate-fade-in">
-      <div className="glass-dark w-full max-w-sm rounded-[2.5rem] p-8 shadow-2xl animate-scale-in text-center border border-white/10">
+      <div className="glass-dark w-full max-w-sm rounded-2xl p-8 shadow-2xl animate-scale-in text-center border border-white/10">
         <div className={`w-20 h-20 rounded-full flex items-center justify-center mx-auto mb-6 ${type === 'danger' ? 'bg-red-500/10 text-red-500' : 'bg-gold-primary/10 text-gold-primary'}`}>
           <Icons.AlertCircle size={40} />
         </div>

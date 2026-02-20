@@ -117,7 +117,7 @@ const ScreenPackages = ({ onClose, showNotification }) => {
 
         <div className="flex-1 overflow-y-auto p-6 space-y-6">
           {/* Package Summary */}
-          <div className="glass-dark p-6 rounded-[2rem] border border-white/10">
+          <div className="glass-dark p-6 rounded-xl border border-white/10">
             <div className="flex items-center gap-4 mb-4">
               <div className={`w-14 h-14 rounded-2xl flex items-center justify-center ${getPackageColor(selectedPkg.slug).bg} ${getPackageColor(selectedPkg.slug).text}`}>
                 {getPackageIcon(selectedPkg.slug)}
@@ -142,7 +142,7 @@ const ScreenPackages = ({ onClose, showNotification }) => {
           </div>
 
           {selectedPkg.slug === 'free' ? (
-            <div className="glass-dark p-6 rounded-[2rem] border border-red-500/20">
+            <div className="glass-dark p-6 rounded-xl border border-red-500/20">
               <div className="flex items-center gap-3 mb-3">
                 <Icons.AlertCircle size={20} className="text-red-400" />
                 <h3 className="text-sm font-black text-red-400">คำเตือน</h3>
@@ -156,7 +156,7 @@ const ScreenPackages = ({ onClose, showNotification }) => {
           ) : (
             <>
               {/* Payment Method */}
-              <div className="glass-dark p-6 rounded-[2rem] border border-white/10">
+              <div className="glass-dark p-6 rounded-xl border border-white/10">
                 <h3 className="text-sm font-black text-gray-400 uppercase tracking-widest mb-4">ช่องทางชำระเงิน</h3>
                 <div className="space-y-3">
                   <div className="flex items-center gap-4 p-4 bg-white/5 rounded-2xl border border-gold-primary/30">
@@ -175,7 +175,7 @@ const ScreenPackages = ({ onClose, showNotification }) => {
               </div>
 
               {/* QR Code Placeholder */}
-              <div className="glass-dark p-6 rounded-[2rem] border border-white/10 text-center">
+              <div className="glass-dark p-6 rounded-xl border border-white/10 text-center">
                 <div className="w-48 h-48 mx-auto bg-white rounded-2xl flex items-center justify-center mb-4">
                   <div className="text-center">
                     <Icons.CreditCard size={48} className="text-gray-400 mx-auto mb-2" />
@@ -231,7 +231,7 @@ const ScreenPackages = ({ onClose, showNotification }) => {
             <div
               key={pkg.id}
               onClick={() => handleSelectPackage(pkg)}
-              className={`glass-dark p-6 rounded-[2rem] border transition-all cursor-pointer active:scale-[0.98] ${isCurrent ? `${colors.border} ring-1 ring-gold-primary/20` : 'border-white/10 hover:border-white/20'}`}
+              className={`glass-dark p-6 rounded-xl border transition-all cursor-pointer active:scale-[0.98] ${isCurrent ? `${colors.border} ring-1 ring-gold-primary/20` : 'border-white/10 hover:border-white/20'}`}
             >
               {/* Header */}
               <div className="flex items-center gap-4 mb-4">

@@ -132,7 +132,7 @@ const ScreenDashboard = ({ activeWalletId, setActiveWalletId }) => {
       </div>
 
       {/* Net Balance Card */}
-      <div className="glass-dark p-8 rounded-[2.5rem] shadow-2xl mb-8 text-center border border-white/10 relative overflow-hidden">
+      <div className="glass-dark p-8 rounded-2xl shadow-2xl mb-8 text-center border border-white/10 relative overflow-hidden">
         <div className="absolute top-0 left-0 w-full h-1 gold-bg opacity-50"></div>
         
         {/* Toggle for monthly vs cumulative */}
@@ -164,7 +164,7 @@ const ScreenDashboard = ({ activeWalletId, setActiveWalletId }) => {
       <div className="grid grid-cols-2 gap-4 mb-8">
         <div
           onClick={() => setDashboardTab('expense')}
-          className={`p-5 rounded-[2rem] border transition-all cursor-pointer ${dashboardTab === 'expense' ? 'bg-white/5 border-gold-primary/30 scale-[1.02]' : 'bg-white/5 border-transparent opacity-40'}`}
+          className={`p-5 rounded-xl border transition-all cursor-pointer ${dashboardTab === 'expense' ? 'bg-white/5 border-gold-primary/30 scale-[1.02]' : 'bg-white/5 border-transparent opacity-40'}`}
         >
           <div className="text-sm text-gray-500 font-black uppercase tracking-widest mb-2">รายจ่าย</div>
           <div className="text-2xl font-black text-white">{formatCurrency(totalExpAll).replace('฿', '')}</div>
@@ -172,7 +172,7 @@ const ScreenDashboard = ({ activeWalletId, setActiveWalletId }) => {
         </div>
         <div
           onClick={() => setDashboardTab('income')}
-          className={`p-5 rounded-[2rem] border transition-all cursor-pointer ${dashboardTab === 'income' ? 'bg-white/5 border-gold-primary/30 scale-[1.02]' : 'bg-white/5 border-transparent opacity-40'}`}
+          className={`p-5 rounded-xl border transition-all cursor-pointer ${dashboardTab === 'income' ? 'bg-white/5 border-gold-primary/30 scale-[1.02]' : 'bg-white/5 border-transparent opacity-40'}`}
         >
           <div className="text-sm text-gray-500 font-black uppercase tracking-widest mb-2">รายรับ</div>
           <div className="text-2xl font-black text-white">{formatCurrency(totalIncAll).replace('฿', '')}</div>
@@ -181,7 +181,7 @@ const ScreenDashboard = ({ activeWalletId, setActiveWalletId }) => {
       </div>
 
       {/* Chart & Categories */}
-      <div className="glass-dark rounded-[2.5rem] p-8 shadow-2xl flex-1 flex flex-col items-center border border-white/10">
+      <div className="glass-dark rounded-2xl p-8 shadow-2xl flex-1 flex flex-col items-center border border-white/10">
         <div className="mb-10">
           <DonutChart data={chartData} total={totalDisplay || 1} />
         </div>

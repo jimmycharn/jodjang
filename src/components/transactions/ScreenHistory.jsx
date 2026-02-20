@@ -237,7 +237,7 @@ const ScreenHistory = ({ activeWalletId, setActiveWalletId, setEditTx, setActive
                   </span>
                 </div>
               </div>
-              <div className="glass-dark rounded-[2rem] border border-white/10 overflow-hidden shadow-xl">
+              <div className="glass-dark rounded-xl border border-white/10 overflow-hidden shadow-xl">
                 {grouped[date].map(t => {
                   const cat = categories.find(c => c.id === t.categoryId) || { name: 'อื่นๆ', color: '#333' };
                   const isSelected = selectedIds.has(t.id);
@@ -300,7 +300,7 @@ const ScreenHistory = ({ activeWalletId, setActiveWalletId, setEditTx, setActive
       {/* Select Mode Toolbar */}
       {selectMode && (
         <div className="fixed bottom-6 left-0 right-0 mx-auto max-w-md px-4 z-[100] animate-slide-up">
-          <div className="bg-white dark:bg-[#1a1a1a] border border-gray-200 dark:border-white/10 rounded-[2rem] px-6 py-4 flex items-center justify-between shadow-2xl">
+          <div className="bg-white dark:bg-[#1a1a1a] border border-gray-200 dark:border-white/10 rounded-xl px-6 py-4 flex items-center justify-between shadow-2xl">
             <button
               onClick={exitSelectMode}
               className="flex items-center gap-2 text-gray-600 dark:text-gray-400 font-black text-sm active:scale-95 transition-all"

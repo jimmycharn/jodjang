@@ -67,7 +67,7 @@ const CategoryManager = ({ onClose, requestConfirm }) => {
         {/* Add Button at Top */}
         <button
           onClick={() => openEditor(null)}
-          className="w-full mb-6 py-4 rounded-[1.5rem] font-black text-black gold-bg shadow-xl shadow-gold-900/30 active:scale-[0.98] transition-all"
+          className="w-full mb-6 py-4 rounded-xl font-black text-black gold-bg shadow-xl shadow-gold-900/30 active:scale-[0.98] transition-all"
         >
           + เพิ่มหมวดหมู่ใหม่
         </button>
@@ -77,7 +77,7 @@ const CategoryManager = ({ onClose, requestConfirm }) => {
             <div
               key={c.id}
               onClick={() => openEditor(c)}
-              className="glass-dark p-5 rounded-[1.5rem] flex items-center justify-between border border-white/10 hover:border-gold-primary/30 transition-all cursor-pointer group"
+              className="glass-dark p-5 rounded-xl flex items-center justify-between border border-white/10 hover:border-gold-primary/30 transition-all cursor-pointer group"
             >
               <div className="flex items-center gap-5">
                 <div

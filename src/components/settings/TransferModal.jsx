@@ -51,7 +51,7 @@ const TransferModal = ({ onClose, showNotification }) => {
 
   return (
     <div className="fixed inset-0 z-[100] bg-black/80 backdrop-blur-sm flex items-center justify-center p-4 overflow-y-auto" onClick={onClose}>
-      <div className="glass-dark w-full max-w-sm rounded-[2rem] p-6 shadow-2xl border border-white/10 animate-scale-in my-auto" onClick={e => e.stopPropagation()}>
+      <div className="glass-dark w-full max-w-sm rounded-xl p-6 shadow-2xl border border-white/10 animate-scale-in my-auto" onClick={e => e.stopPropagation()}>
         <div className="flex justify-between items-center mb-6">
           <h3 className="text-xl font-black text-white tracking-tight">โอนเงิน</h3>
           <button onClick={onClose} className="text-gray-500 hover:text-white transition-colors">

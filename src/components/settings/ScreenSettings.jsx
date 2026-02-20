@@ -23,7 +23,7 @@ const ScreenSettings = ({ showNotification, requestConfirm }) => {
         {/* Theme Toggle */}
         <div
           onClick={toggleTheme}
-          className="flex items-center justify-between p-6 glass-dark rounded-[1.5rem] cursor-pointer border border-white/5 hover:border-gold-primary/30 transition-all group"
+          className="flex items-center justify-between p-6 glass-dark rounded-xl cursor-pointer border border-white/5 hover:border-gold-primary/30 transition-all group"
         >
           <div className="flex items-center gap-4">
             <div className={`w-12 h-12 rounded-2xl flex items-center justify-center group-hover:scale-110 transition-transform ${theme === 'dark' ? 'bg-gold-primary/10 text-gold-primary' : 'bg-blue-500/10 text-blue-500'}`}>
@@ -42,7 +42,7 @@ const ScreenSettings = ({ showNotification, requestConfirm }) => {
         {/* Category Manager */}
         <div
           onClick={() => setShowCategoryManager(true)}
-          className="flex items-center justify-between p-6 glass-dark rounded-[1.5rem] cursor-pointer border border-white/5 hover:border-gold-primary/30 transition-all group"
+          className="flex items-center justify-between p-6 glass-dark rounded-xl cursor-pointer border border-white/5 hover:border-gold-primary/30 transition-all group"
         >
           <div className="flex items-center gap-4">
             <div className="w-12 h-12 rounded-2xl bg-gold-primary/10 flex items-center justify-center text-gold-primary group-hover:scale-110 transition-transform">
@@ -62,7 +62,7 @@ const ScreenSettings = ({ showNotification, requestConfirm }) => {
             }
             setShowWalletManager(true);
           }}
-          className={`flex items-center justify-between p-6 glass-dark rounded-[1.5rem] cursor-pointer border transition-all group ${!pkgFeatures.wallet_edit ? 'border-white/5 opacity-50' : 'border-white/5 hover:border-gold-primary/30'}`}
+          className={`flex items-center justify-between p-6 glass-dark rounded-xl cursor-pointer border transition-all group ${!pkgFeatures.wallet_edit ? 'border-white/5 opacity-50' : 'border-white/5 hover:border-gold-primary/30'}`}
         >
           <div className="flex items-center gap-4">
             <div className={`w-12 h-12 rounded-2xl flex items-center justify-center group-hover:scale-110 transition-transform ${!pkgFeatures.wallet_edit ? 'bg-gray-500/10 text-gray-500' : 'bg-gold-primary/10 text-gold-primary'}`}>
@@ -85,7 +85,7 @@ const ScreenSettings = ({ showNotification, requestConfirm }) => {
             }
             setShowTransferModal(true);
           }}
-          className={`flex items-center justify-between p-6 glass-dark rounded-[1.5rem] cursor-pointer border transition-all group ${!pkgFeatures.transfer ? 'border-white/5 opacity-50' : 'border-white/5 hover:border-gold-primary/30'}`}
+          className={`flex items-center justify-between p-6 glass-dark rounded-xl cursor-pointer border transition-all group ${!pkgFeatures.transfer ? 'border-white/5 opacity-50' : 'border-white/5 hover:border-gold-primary/30'}`}
         >
           <div className="flex items-center gap-4">
             <div className={`w-12 h-12 rounded-2xl flex items-center justify-center group-hover:scale-110 transition-transform ${!pkgFeatures.transfer ? 'bg-gray-500/10 text-gray-500' : 'bg-gold-primary/10 text-gold-primary'}`}>
@@ -108,7 +108,7 @@ const ScreenSettings = ({ showNotification, requestConfirm }) => {
             }
             setShowExportModal(true);
           }}
-          className={`flex items-center justify-between p-6 glass-dark rounded-[1.5rem] cursor-pointer border transition-all group ${!pkgFeatures.csv_export ? 'border-white/5 opacity-50' : 'border-white/5 hover:border-gold-primary/30'}`}
+          className={`flex items-center justify-between p-6 glass-dark rounded-xl cursor-pointer border transition-all group ${!pkgFeatures.csv_export ? 'border-white/5 opacity-50' : 'border-white/5 hover:border-gold-primary/30'}`}
         >
           <div className="flex items-center gap-4">
             <div className={`w-12 h-12 rounded-2xl flex items-center justify-center group-hover:scale-110 transition-transform ${!pkgFeatures.csv_export ? 'bg-gray-500/10 text-gray-500' : 'bg-gold-primary/10 text-gold-primary'}`}>

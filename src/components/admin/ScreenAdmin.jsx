@@ -168,7 +168,7 @@ const ScreenAdmin = ({ onBack }) => {
         <div className="space-y-6">
           {/* Stats Cards */}
           <div className="grid grid-cols-2 gap-4">
-            <div className="glass-dark p-5 rounded-[2rem] border border-white/10">
+            <div className="glass-dark p-5 rounded-xl border border-white/10">
               <div className="flex items-center gap-2 mb-3">
                 <div className="w-8 h-8 rounded-xl bg-blue-500/20 flex items-center justify-center">
                   <Icons.Users size={16} className="text-blue-400" />
@@ -178,7 +178,7 @@ const ScreenAdmin = ({ onBack }) => {
               <div className="text-xs text-gray-500 font-bold">ผู้ใช้ทั้งหมด</div>
             </div>
 
-            <div className="glass-dark p-5 rounded-[2rem] border border-white/10">
+            <div className="glass-dark p-5 rounded-xl border border-white/10">
               <div className="flex items-center gap-2 mb-3">
                 <div className="w-8 h-8 rounded-xl bg-green-500/20 flex items-center justify-center">
                   <Icons.Activity size={16} className="text-green-400" />
@@ -188,7 +188,7 @@ const ScreenAdmin = ({ onBack }) => {
               <div className="text-xs text-gray-500 font-bold">ใช้งานเดือนนี้</div>
             </div>
 
-            <div className="glass-dark p-5 rounded-[2rem] border border-white/10">
+            <div className="glass-dark p-5 rounded-xl border border-white/10">
               <div className="flex items-center gap-2 mb-3">
                 <div className="w-8 h-8 rounded-xl bg-red-500/20 flex items-center justify-center">
                   <Icons.TrendingUp size={16} className="text-red-400" />
@@ -198,7 +198,7 @@ const ScreenAdmin = ({ onBack }) => {
               <div className="text-xs text-gray-500 font-bold">รายจ่ายเดือนนี้</div>
             </div>
 
-            <div className="glass-dark p-5 rounded-[2rem] border border-white/10">
+            <div className="glass-dark p-5 rounded-xl border border-white/10">
               <div className="flex items-center gap-2 mb-3">
                 <div className="w-8 h-8 rounded-xl bg-gold-primary/20 flex items-center justify-center">
                   <Icons.DollarSign size={16} className="text-gold-primary" />
@@ -210,7 +210,7 @@ const ScreenAdmin = ({ onBack }) => {
           </div>
 
           {/* Transaction Stats */}
-          <div className="glass-dark p-6 rounded-[2rem] border border-white/10">
+          <div className="glass-dark p-6 rounded-xl border border-white/10">
             <h3 className="text-sm font-black text-gray-400 uppercase tracking-widest mb-4">สถิติรายการ</h3>
             <div className="space-y-4">
               <div className="flex justify-between items-center">
@@ -231,7 +231,7 @@ const ScreenAdmin = ({ onBack }) => {
           </div>
 
           {/* Top Users */}
-          <div className="glass-dark p-6 rounded-[2rem] border border-white/10">
+          <div className="glass-dark p-6 rounded-xl border border-white/10">
             <h3 className="text-sm font-black text-gray-400 uppercase tracking-widest mb-4">ผู้ใช้ที่ใช้งานมากสุด</h3>
             <div className="space-y-3">
               {userStats
@@ -261,7 +261,7 @@ const ScreenAdmin = ({ onBack }) => {
             <button
               key={u.id}
               onClick={() => setSelectedUser(u.id)}
-              className="w-full glass-dark p-5 rounded-[2rem] border border-white/10 text-left hover:border-gold-primary/30 transition-all active:scale-[0.98]"
+              className="w-full glass-dark p-5 rounded-xl border border-white/10 text-left hover:border-gold-primary/30 transition-all active:scale-[0.98]"
             >
               <div className="flex items-center gap-4">
                 <div className="w-12 h-12 rounded-2xl bg-white/5 flex items-center justify-center">
@@ -331,7 +331,7 @@ const ScreenAdmin = ({ onBack }) => {
             const userPkgName = userSub?.packages?.name || 'ฟรี';
             const expiresAt = userSub?.expires_at ? new Date(userSub.expires_at) : null;
             return (
-              <div className="glass-dark p-5 rounded-[2rem] border border-white/10">
+              <div className="glass-dark p-5 rounded-xl border border-white/10">
                 <div className="flex items-center justify-between mb-3">
                   <div>
                     <div className="text-[10px] text-gray-500 font-black uppercase tracking-widest">แพ็คเกจปัจจุบัน</div>
@@ -357,11 +357,11 @@ const ScreenAdmin = ({ onBack }) => {
 
           {/* User Summary Cards */}
           <div className="grid grid-cols-2 gap-4">
-            <div className="glass-dark p-5 rounded-[2rem] border border-white/10">
+            <div className="glass-dark p-5 rounded-xl border border-white/10">
               <div className="text-xs text-gray-500 font-bold mb-1">รายจ่ายเดือนนี้</div>
               <div className="text-xl font-black text-red-400">{formatCurrency(selectedUserData.expense)}</div>
             </div>
-            <div className="glass-dark p-5 rounded-[2rem] border border-white/10">
+            <div className="glass-dark p-5 rounded-xl border border-white/10">
               <div className="text-xs text-gray-500 font-bold mb-1">รายรับเดือนนี้</div>
               <div className="text-xl font-black text-green-400">{formatCurrency(selectedUserData.income)}</div>
             </div>
@@ -369,7 +369,7 @@ const ScreenAdmin = ({ onBack }) => {
 
           {/* Top Categories */}
           {selectedUserData.topCategories.length > 0 && (
-            <div className="glass-dark p-6 rounded-[2rem] border border-white/10">
+            <div className="glass-dark p-6 rounded-xl border border-white/10">
               <h3 className="text-sm font-black text-gray-400 uppercase tracking-widest mb-4">หมวดหมู่ที่ใช้จ่ายมากสุด</h3>
               <div className="space-y-3">
                 {selectedUserData.topCategories.map((cat, i) => (
@@ -385,7 +385,7 @@ const ScreenAdmin = ({ onBack }) => {
 
           {/* Wallets */}
           {selectedUserData.userWallets.length > 0 && (
-            <div className="glass-dark p-6 rounded-[2rem] border border-white/10">
+            <div className="glass-dark p-6 rounded-xl border border-white/10">
               <h3 className="text-sm font-black text-gray-400 uppercase tracking-widest mb-4">กระเป๋าเงิน</h3>
               <div className="space-y-3">
                 {selectedUserData.userWallets.map(w => (
@@ -402,7 +402,7 @@ const ScreenAdmin = ({ onBack }) => {
           )}
 
           {/* Recent Transactions */}
-          <div className="glass-dark p-6 rounded-[2rem] border border-white/10">
+          <div className="glass-dark p-6 rounded-xl border border-white/10">
             <h3 className="text-sm font-black text-gray-400 uppercase tracking-widest mb-4">รายการล่าสุด</h3>
             <div className="space-y-3">
               {selectedUserData.recentTx.length === 0 ? (
@@ -434,7 +434,7 @@ const ScreenAdmin = ({ onBack }) => {
               setEditingPkg('new');
               setPkgForm({ name: '', slug: '', price: '', duration_days: '', description: '', user_visible: true, features: { voice: true, max_wallets: 999, wallet_edit: true, csv_export: true, transfer: true } });
             }}
-            className="w-full py-4 rounded-[1.5rem] font-black text-black gold-bg shadow-xl shadow-gold-900/30 active:scale-[0.98] transition-all"
+            className="w-full py-4 rounded-xl font-black text-black gold-bg shadow-xl shadow-gold-900/30 active:scale-[0.98] transition-all"
           >
             + เพิ่มแพ็คเกจใหม่
           </button>
@@ -443,7 +443,7 @@ const ScreenAdmin = ({ onBack }) => {
           {allPackages.map(pkg => {
             const subCount = allSubscriptions.filter(s => s.package_id === pkg.id).length;
             return (
-              <div key={pkg.id} className="glass-dark p-5 rounded-[2rem] border border-white/10">
+              <div key={pkg.id} className="glass-dark p-5 rounded-xl border border-white/10">
                 <div className="flex items-center gap-4 mb-3">
                   <div className={`w-12 h-12 rounded-2xl flex items-center justify-center ${pkg.slug === 'free' ? 'bg-gray-500/20 text-gray-400' : pkg.slug === 'yearly' ? 'bg-gold-primary/20 text-gold-primary' : 'bg-blue-500/20 text-blue-400'}`}>
                     {pkg.slug === 'yearly' ? <Icons.Crown size={24} /> : pkg.slug === 'monthly' ? <Icons.Zap size={24} /> : <Icons.Package size={24} />}

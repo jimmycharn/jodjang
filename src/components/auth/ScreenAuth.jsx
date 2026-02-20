@@ -32,7 +32,7 @@ const ScreenAuth = () => {
 
   return (
     <div className="min-h-screen flex flex-col items-center justify-center p-6 bg-[#0a0a0a]">
-      <div className="glass-dark p-8 rounded-[2.5rem] shadow-2xl w-full max-w-sm mx-auto animate-scale-in border border-white/10">
+      <div className="glass-dark p-8 rounded-2xl shadow-2xl w-full max-w-sm mx-auto animate-scale-in border border-white/10">
         <div className="text-center mb-10">
           <div className="w-20 h-20 gold-bg rounded-full flex items-center justify-center mx-auto mb-6 shadow-lg shadow-gold-900/20 text-black">
             <Icons.PieChart size={40} />

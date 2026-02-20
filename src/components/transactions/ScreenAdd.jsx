@@ -307,7 +307,7 @@ const ScreenAdd = ({ editTx, setEditTx, setActiveTab, showNotification, requestC
           </div>
 
           {/* Category Selection */}
-          <div className="glass-dark flex-1 rounded-t-[3rem] p-8 pb-32 shadow-2xl overflow-y-auto border-t border-white/10">
+          <div className="glass-dark flex-1 rounded-t-2xl p-8 pb-32 shadow-2xl overflow-y-auto border-t border-white/10">
             <form onSubmit={handleSubmit} className="space-y-8">
               {/* Horizontal scrollable category pills */}
               <div className="overflow-x-auto hide-scroll -mx-2 px-2">
@@ -341,13 +341,13 @@ const ScreenAdd = ({ editTx, setEditTx, setActiveTab, showNotification, requestC
                   type="text"
                   value={note}
                   onChange={e => setNote(e.target.value)}
-                  className="w-full p-5 bg-white/5 border border-white/10 rounded-[1.5rem] outline-none font-bold text-white focus:border-gold-primary/30 transition-all"
+                  className="w-full p-5 bg-white/5 border border-white/10 rounded-xl outline-none font-bold text-white focus:border-gold-primary/30 transition-all"
                   placeholder="บันทึกเพิ่มเติม..."
                 />
               </div>
               <button
                 type="submit"
-                className="w-full py-5 gold-bg text-black rounded-[1.5rem] font-black text-lg shadow-2xl shadow-gold-900/30 active:scale-[0.98] transition-all"
+                className="w-full py-5 gold-bg text-black rounded-xl font-black text-lg shadow-2xl shadow-gold-900/30 active:scale-[0.98] transition-all"
               >
                 บันทึกรายการ
               </button>
